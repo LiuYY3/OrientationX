@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/id_baidu_map"
+        android:fitsSystemWindows="true"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true">
+    </com.baidu.mapapi.map.MapView>
+
+    <include
+        android:id="@+id/id_head_layout"
+        layout="@layout/ui_share_title"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/id_search_history_list"
+        android:layout_below="@id/id_head_layout"
+        android:layout_marginTop="@dimen/dimen_small_margin"
+        android:layout_marginStart="@dimen/dimen_search_bar_margin"
+        android:layout_marginEnd="@dimen/dimen_search_bar_margin"
+        android:layout_marginBottom="@dimen/dimen_search_bar_margin"
+        android:background="@android:color/white"
+        android:fadeScrollbars="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

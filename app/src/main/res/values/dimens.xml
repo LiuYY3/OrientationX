@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dimen_common_side_margin">16dp</dimen>
+    <dimen name="dimen_search_bar_margin">8dp</dimen>
+    <dimen name="dimen_small_margin">4dp</dimen>
+
+    <!--text size-->
+    <dimen name="dimen_input_txt_size">24sp</dimen>
+    <dimen name="dimen_title_txt_size">16sp</dimen>
+    <dimen name="dimen_right_side_size">12sp</dimen>
+
+</resources>

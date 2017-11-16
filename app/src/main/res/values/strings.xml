@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">OrientationX</string>
+    <string name="app_content_description">Missing</string>
+    <string name="app_input_hint">Input Here</string>
+
+    <!--map-->
+
+</resources>
