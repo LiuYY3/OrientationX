@@ -1,6 +1,5 @@
 package com.xmb.orientationx.activity;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -45,10 +44,8 @@ import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding.view.RxView;
-import com.tbruyelle.rxpermissions.RxPermissions;
 import com.xmb.orientationx.City;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.adaptor.XSearchAdaptor;
@@ -64,9 +61,10 @@ import java.util.Locale;
 import rx.functions.Action1;
 
 /**
- * Created by 徐梦笔 on 2017/10/31.
+ * XMapActivity.
+ * subclass of {@link XBaseActivity}
+ * @author 徐梦笔
  */
-
 public class XMapActivity extends XBaseActivity implements BDLocationListener, LocationListener, OnGetPoiSearchResultListener, TextWatcher{
 
     private static final String TAG = "Map";
@@ -304,7 +302,6 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
     }
 
     private void initTitleView() {
-//        this.showTitle(true, getResources().getString(R.string.app_name));
         XMapActivity.this.showSearchBar(true);
     }
 
