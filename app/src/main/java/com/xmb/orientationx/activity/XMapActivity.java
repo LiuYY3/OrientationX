@@ -248,11 +248,11 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
 
     private void initViews() {
         initComponents();
-        initData();
-        initEditText();
         initMapView();
+        initEditText();
         initRecyclerView();
         initTitleView();
+        initData();
         initRXBindings();
     }
 

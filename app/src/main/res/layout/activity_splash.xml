@@ -13,17 +13,16 @@
         android:text="@string/app_author"
         android:layout_centerInParent="true"
         android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="20sp"/>
+        android:textSize="@dimen/dimen_splash_author"/>
 
     <TextView
+        android:id="@+id/id_app_author_txt"
         android:layout_above="@id/id_app_name_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:layout_centerInParent="true"
         android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="45sp"/>
+        android:textSize="@dimen/dimen_splash_name"/>
 
 </RelativeLayout>
