@@ -60,7 +60,7 @@ public class XSplashActivity extends XBaseActivity implements Runnable {
             @Override
             public void call(final Boolean aBoolean) {
                 ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(10);
-                threadPool.schedule(XSplashActivity.this, 10, TimeUnit.SECONDS);
+                threadPool.schedule(XSplashActivity.this, 3, TimeUnit.SECONDS);
             }
         });
     }
