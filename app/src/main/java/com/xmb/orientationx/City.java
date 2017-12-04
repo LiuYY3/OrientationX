@@ -1,4 +1,4 @@
-package com.xmb.orientationx.data;
+package com.xmb.orientationx;
 
 import java.io.Serializable;
 

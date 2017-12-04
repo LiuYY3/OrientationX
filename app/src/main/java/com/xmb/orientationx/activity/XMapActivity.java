@@ -1,8 +1,11 @@
 package com.xmb.orientationx.activity;
 
+import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,16 +46,17 @@ import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding.view.RxView;
+import com.xmb.orientationx.City;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.adaptor.XSearchAdaptor;
 import com.xmb.orientationx.component.XSearchBar;
-import com.xmb.orientationx.data.City;
 import com.xmb.orientationx.exception.XBaseException;
 import com.xmb.orientationx.utils.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import rx.functions.Action1;
 
@@ -61,7 +65,7 @@ import rx.functions.Action1;
  * subclass of {@link XBaseActivity}
  * @author 徐梦笔
  */
-public class XMapActivity extends XBaseActivity implements BDLocationListener, OnGetPoiSearchResultListener, TextWatcher{
+public class XMapActivity extends XBaseActivity implements BDLocationListener, LocationListener, OnGetPoiSearchResultListener, TextWatcher{
 
     private static final String TAG = "Map";
     private MapView mCenterMapView;
@@ -94,11 +98,13 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, O
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.colorTransparent, getTheme()));
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        mLocationClient = new LocationClient(getApplicationContext());
-        mLocationClient.registerLocationListener(this);
-        setLocationClient();
-        mLocationClient.start();
+//        mLocationClient = new LocationClient(getApplicationContext());
+//        mLocationClient.registerLocationListener(this);
+//        setLocationClient();
+//        mLocationClient.start();
+        initCurrentLocation();
         initViews();
+        setCurrentLocation(mLocation);
     }
 
     @Override
@@ -123,7 +129,27 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, O
     @Override
     public void onReceiveLocation(BDLocation location) {
         Log.i(TAG, "onReceiveLocation: " + location.getLocTypeDescription());
-        setCurrentLocation(location);
+//        setCurrentLocation(location);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+//        setCurrentLocation(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
@@ -352,15 +378,43 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, O
         mLocationClient.setLocOption(option);
     }
 
-    private void setCurrentLocation(BDLocation location) {
+    private void setCurrentLocation(Location location) {
         Log.i(TAG, "setCurrentLocation: " + location.getLatitude() + "; " + location.getLongitude());
         MyLocationData locData = new MyLocationData.Builder()
-                .accuracy(location.getRadius())
+//                .accuracy(location.getRadius())
                 .latitude(location.getLatitude())
                 .longitude(location.getLongitude()).build();
         mBaiduMap.setMyLocationData(locData);
         MyLocationConfiguration config = new MyLocationConfiguration(mMode, true, null);
         mBaiduMap.setMyLocationConfiguration(config);
+    }
+
+    private void initCurrentLocation() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        PackageManager packageManager = getPackageManager();
+        boolean permission1 = (PackageManager.PERMISSION_GRANTED == packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.xmb.orientationx"));
+        boolean permission2 = (PackageManager.PERMISSION_GRANTED == packageManager.checkPermission("android.permission.ACCESS_COARSE_LOCATION", "com.xmb.orientationx"));
+
+        mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (mLocation == null) {
+            mLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        Log.i(TAG, "initCurrentLocation: " + mLocation.getLatitude() + "; " + mLocation.getLongitude());
+        List<Address> result = null;
+        try {
+            if (mLocation != null) {
+                Geocoder gc = new Geocoder(this, Locale.CHINA);
+                result = gc.getFromLocation(mLocation.getLatitude(),
+                        mLocation.getLongitude(), 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (result != null) {
+            for (Address address : result) {
+                mCurrentCity = address;
+            }
+        }
     }
 
 }
