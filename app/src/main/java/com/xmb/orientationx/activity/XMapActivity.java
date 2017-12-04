@@ -373,6 +373,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setCoorType("bd0911");
         option.disableCache(true);
+        option.setScanSpan(2000);
         option.setOpenGps(true);
         option.setEnableSimulateGps(true);
         mLocationClient.setLocOption(option);
