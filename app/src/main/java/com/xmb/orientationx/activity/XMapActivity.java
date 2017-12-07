@@ -42,6 +42,7 @@ import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -408,6 +409,20 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
                 mCurrentCity = address.getLocality();
             }
         }
+    }
+
+    private class RoutePlanTool implements BaiduNaviManager.RoutePlanListener{
+
+        @Override
+        public void onJumpToNavigator() {
+
+        }
+
+        @Override
+        public void onRoutePlanFailed() {
+
+        }
+        
     }
 
 }
