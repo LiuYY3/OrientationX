@@ -85,7 +85,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mDataList = new ArrayList<String>();
     private ArrayList<LatLng> mPointLocationList = new ArrayList<>();
-    private Address mCurrentCity;
+    private String mCurrentCity;
     private String mPossibleCityName;
     private List<City> mAllCities;
     public LocationClient mLocationClient = null;
@@ -98,11 +98,6 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.colorTransparent, getTheme()));
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        mLocationClient = new LocationClient(getApplicationContext());
-        mLocationClient.registerLocationListener(this);
-        setLocationClient();
-        mLocationClient.start();
-        initCurrentLocation();
         initViews();
     }
 
@@ -133,7 +128,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
 
     @Override
     public void onLocationChanged(Location location) {
-//        setCurrentLocation(location);
+
     }
 
     @Override
@@ -164,7 +159,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
             mDataList = new ArrayList<>();
             mPointLocationList = new ArrayList<>();
             for (City city : mAllCities) {
-                if (mInputEditText.getText().toString().contains(mCurrentCity.getLocality().replace("市", ""))) {
+                if (mInputEditText.getText().toString().contains(mCurrentCity.replace("市", ""))) {
                     PoiSearch poiSearch = PoiSearch.newInstance();
                     poiSearch.setOnGetPoiSearchResultListener(new OnGetPoiSearchResultListener() {
                         @Override
@@ -241,14 +236,24 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
     @Override
     public void afterTextChanged(Editable s) {
         Log.i(TAG, "afterTextChanged: " + mInputEditText.getText().toString());
-        Log.i(TAG, "afterTextChanged: " + mCurrentCity.getLocality().replace("市", ""));
-        startSearch(mCurrentCity.getLocality().replace("市", ""), mInputEditText.getText().toString());
+        Log.i(TAG, "afterTextChanged: " + mCurrentCity.replace("市", ""));
+        startSearch(mCurrentCity.replace("市", ""), mInputEditText.getText().toString());
     }
 
     private void initViews() {
-        initComponents();
+        mLocationClient = new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(this);
+        setLocationClient();
+        mLocationClient.start();
+        initCurrentLocation();
+        mCenterMapView = (MapView) this.findViewById(R.id.id_baidu_map);
+        mMapSearchBar = (XSearchBar) this.findViewById(R.id.id_search_bar);
+        mMiddleTextView = (TextView) this.findViewById(R.id.id_middle_txt);
+        mInputEditText = (EditText) this.findViewById(R.id.id_search_txt);
+        mSearchImageView = (ImageView) this.findViewById(R.id.id_search_img);
+        mSearchHistroyListView = (RecyclerView) this.findViewById(R.id.id_search_history_list);
         initMapView();
-        initEditText();
+        mInputEditText.addTextChangedListener(this);
         initRecyclerView();
         initTitleView();
         initData();
@@ -267,19 +272,6 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
     private void initSearchBar() {
         mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
-    }
-
-    private void initComponents() {
-        mCenterMapView = (MapView) this.findViewById(R.id.id_baidu_map);
-        mMapSearchBar = (XSearchBar) this.findViewById(R.id.id_search_bar);
-        mMiddleTextView = (TextView) this.findViewById(R.id.id_middle_txt);
-        mInputEditText = (EditText) this.findViewById(R.id.id_search_txt);
-        mSearchImageView = (ImageView) this.findViewById(R.id.id_search_img);
-        mSearchHistroyListView = (RecyclerView) this.findViewById(R.id.id_search_history_list);
-    }
-
-    private void initEditText() {
-        mInputEditText.addTextChangedListener(this);
     }
 
     private void initRecyclerView() {
@@ -347,7 +339,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
                     }
                 });
                 poiSearch.searchInCity(new PoiCitySearchOption()
-                        .city(mCurrentCity.getLocality().replace("市", "")).keyword(mInputEditText.getText().toString()));
+                        .city(mCurrentCity.replace("市", "")).keyword(mInputEditText.getText().toString()));
                 mInputEditText.setText("");
                 mAdapter.updateData(new ArrayList<String>(), new ArrayList<LatLng>());
             }
@@ -375,6 +367,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         option.setScanSpan(2000);
         option.setOpenGps(true);
         option.setEnableSimulateGps(true);
+        option.setPriority(LocationClientOption.GpsFirst);
         mLocationClient.setLocOption(option);
     }
 
@@ -412,7 +405,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         }
         if (result != null) {
             for (Address address : result) {
-                mCurrentCity = address;
+                mCurrentCity = address.getLocality();
             }
         }
     }
