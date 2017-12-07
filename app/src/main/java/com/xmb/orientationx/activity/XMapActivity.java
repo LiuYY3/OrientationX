@@ -98,13 +98,12 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.colorTransparent, getTheme()));
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-//        mLocationClient = new LocationClient(getApplicationContext());
-//        mLocationClient.registerLocationListener(this);
-//        setLocationClient();
-//        mLocationClient.start();
+        mLocationClient = new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(this);
+        setLocationClient();
+        mLocationClient.start();
         initCurrentLocation();
         initViews();
-        setCurrentLocation(mLocation);
     }
 
     @Override
@@ -129,7 +128,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
     @Override
     public void onReceiveLocation(BDLocation location) {
         Log.i(TAG, "onReceiveLocation: " + location.getLocTypeDescription());
-//        setCurrentLocation(location);
+        setCurrentLocation(location);
     }
 
     @Override
@@ -379,10 +378,10 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         mLocationClient.setLocOption(option);
     }
 
-    private void setCurrentLocation(Location location) {
+    private void setCurrentLocation(BDLocation location) {
         Log.i(TAG, "setCurrentLocation: " + location.getLatitude() + "; " + location.getLongitude());
         MyLocationData locData = new MyLocationData.Builder()
-//                .accuracy(location.getRadius())
+                .accuracy(location.getRadius())
                 .latitude(location.getLatitude())
                 .longitude(location.getLongitude()).build();
         mBaiduMap.setMyLocationData(locData);
