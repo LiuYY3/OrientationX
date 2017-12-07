@@ -422,7 +422,7 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         public void onRoutePlanFailed() {
 
         }
-        
+
     }
 
 }
