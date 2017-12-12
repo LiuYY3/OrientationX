@@ -41,7 +41,7 @@ public class XSplashActivity extends XBaseActivity implements Runnable {
 
     @Override
     public void run() {
-        Intent intent = new Intent(XSplashActivity.this, XMapActivity.class);
+        Intent intent = new Intent(XSplashActivity.this, XMainActivity.class);
         XSplashActivity.this.startActivity(intent);
         XSplashActivity.this.finish();
     }

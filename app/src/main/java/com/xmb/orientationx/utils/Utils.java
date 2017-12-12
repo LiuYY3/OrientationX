@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Created by lym on 2017/11/12.
@@ -29,6 +30,10 @@ public class Utils {
             stringBuilder.delete(0, stringBuilder.length());
         }
         return stringBuilder.toString().trim();
+    }
+
+    public static Boolean checkEmptyList(List<?> list) {
+        return list != null && list.size() > 0;
     }
 
 }

@@ -11,7 +11,7 @@ import com.baidu.mapapi.SDKInitializer;
  */
 public class XApplication extends Application {
 
-    private Context mContext;
+    private static Context mContext;
 
     /**
      * Called when the application is starting, before any activity, service,
@@ -26,10 +26,10 @@ public class XApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SDKInitializer.initialize(this);
-        mContext = this.getContext();
+        mContext = getApplicationContext();
     }
 
-    public Context getContext() {
+    public static Context getContext() {
         return mContext;
     }
 
