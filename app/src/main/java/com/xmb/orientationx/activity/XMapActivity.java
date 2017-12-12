@@ -47,7 +47,7 @@ import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding.view.RxView;
-import com.xmb.orientationx.City;
+import com.xmb.orientationx.model.City;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.adaptor.XSearchAdaptor;
 import com.xmb.orientationx.component.XSearchBar;
@@ -368,7 +368,6 @@ public class XMapActivity extends XBaseActivity implements BDLocationListener, L
         option.setScanSpan(2000);
         option.setOpenGps(true);
         option.setEnableSimulateGps(true);
-        option.setPriority(LocationClientOption.GpsFirst);
         mLocationClient.setLocOption(option);
     }
 

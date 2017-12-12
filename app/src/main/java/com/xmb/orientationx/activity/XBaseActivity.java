@@ -5,9 +5,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.githang.statusbar.StatusBarCompat;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.component.XSearchBar;
 import com.xmb.orientationx.exception.XBaseException;
@@ -110,6 +112,9 @@ public class XBaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.colorTransparent, getTheme()));
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
             onCreateBase(savedInstanceState);
         } catch (XBaseException e) {
             e.printStackTrace();

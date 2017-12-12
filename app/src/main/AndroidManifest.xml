@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
 
     <application
+        android:name=".application.XApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -45,6 +46,8 @@
 
         <activity android:name="com.xmb.orientationx.activity.XBaseActivity"/>
         <activity android:name=".activity.XMapActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".activity.XMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
