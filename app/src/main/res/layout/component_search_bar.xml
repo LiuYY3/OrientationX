@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/id_search_base"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@color/colorTransparent">
+    android:layout_height="wrap_content"
+    android:background="@color/colorClose">
 
     <RelativeLayout
+        android:id="@+id/id_search_layout"
         android:layout_margin="@dimen/dimen_search_bar_margin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="40dp"
         android:background="@android:color/white">
 
         <ImageView
@@ -35,4 +38,15 @@
 
     </RelativeLayout>
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/id_search_history_list"
+        android:layout_marginTop="@dimen/dimen_small_margin"
+        android:layout_marginStart="@dimen/dimen_search_bar_margin"
+        android:layout_marginEnd="@dimen/dimen_search_bar_margin"
+        android:layout_marginBottom="@dimen/dimen_search_bar_margin"
+        android:background="@android:color/white"
+        android:fadeScrollbars="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
