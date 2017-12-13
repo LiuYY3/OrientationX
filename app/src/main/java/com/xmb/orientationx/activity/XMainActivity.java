@@ -1,5 +1,6 @@
 package com.xmb.orientationx.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -16,11 +17,29 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.Polyline;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRouteLine;
+import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.IndoorRouteResult;
+import com.baidu.mapapi.search.route.MassTransitRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteLine;
+import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.application.XApplication;
 import com.xmb.orientationx.component.XSearchBar;
@@ -36,7 +55,7 @@ import java.util.Locale;
  * extends from {@link XBaseActivity}
  * @author 徐梦笔
  */
-public class XMainActivity extends XBaseActivity implements BDLocationListener, OnGetPoiSearchResultListener, TextWatcher {
+public class XMainActivity extends XBaseActivity implements BDLocationListener, OnGetRoutePlanResultListener {
 
     private BDLocation mCurrentLocation;
     private BDLocation mDestinationLocation;
@@ -45,6 +64,8 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
     private XSearchBar mSearchBar;
     private String mCurrentCityName;
     private LocationClient mLocationClient;
+    private RoutePlanSearch mRoutePlanSearch;
+    private Polyline mPolyline;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
@@ -56,7 +77,11 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
     @Override
     public void onDestroyBase() throws XBaseException {
         super.onDestroyBase();
+        mLocationClient.stop();
         mMapView.onDestroy();
+        mSearchBar.mPoiSearch.destroy();
+        mSearchBar.mSuggestionSearch.destroy();
+        mSearchBar.mInputEditText.removeTextChangedListener(mSearchBar);
     }
 
     @Override
@@ -86,21 +111,6 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         super.onRestartBase();
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
     /**
      * Called when pointer capture is enabled or disabled for the current window.
      *
@@ -113,23 +123,69 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
 
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
+        Log.i(XConstants.TAG_MAIN, "onReceiveLocation: " + bdLocation.getLatitude() + " : " + bdLocation.getLongitude() + " : " + bdLocation.getGpsAccuracyStatus());
         mCurrentLocation = bdLocation;
-        initCity();
+        locateCity();
+        mSearchBar.setCity(mCurrentCityName);
         setCurrentLocation();
     }
 
     @Override
-    public void onGetPoiResult(PoiResult poiResult) {
+    public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
+//        if (Utils.checkEmptyList(walkingRouteResult.getRouteLines())) {
+//            for (WalkingRouteLine walk : walkingRouteResult.getRouteLines()) {
+//                if (Utils.checkEmptyList(walk.getAllStep())) {
+//                    for (WalkingRouteLine.WalkingStep step : walk.getAllStep()) {
+//                        if (Utils.checkEmptyList(step.getWayPoints())) {
+//                            for (LatLng ll : step.getWayPoints()) {
+//                                Log.i(XConstants.TAG_MAIN, "onGetWalkingRouteResult: " + ll.latitude + " : " + ll.longitude);
+//                            }
+//                            OverlayOptions ooPolyline = new PolylineOptions().width(20)
+//                                    .color(0xAAFF0000).points(step.getWayPoints());
+//                            mPolyline = (Polyline) mMap.addOverlay(ooPolyline);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+    }
+
+    @Override
+    public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
 
     }
 
     @Override
-    public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+    public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
 
     }
 
     @Override
-    public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+    public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
+        if (Utils.checkEmptyList(drivingRouteResult.getRouteLines())) {
+            DrivingRouteLine walk = drivingRouteResult.getRouteLines().get(0);
+            if (Utils.checkEmptyList(walk.getAllStep())) {
+                for (DrivingRouteLine.DrivingStep step : walk.getAllStep()) {
+                    if (Utils.checkEmptyList(step.getWayPoints())) {
+                        for (LatLng ll : step.getWayPoints()) {
+                            Log.i(XConstants.TAG_MAIN, "onGetDrivingRouteResult: " + ll.latitude + " : " + ll.longitude);
+                        }
+                        OverlayOptions ooPolyline = new PolylineOptions().width(5)
+                                .color(0xAAFF0000).points(step.getWayPoints());
+                        mPolyline = (Polyline) mMap.addOverlay(ooPolyline);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
+
+    }
+
+    @Override
+    public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
 
     }
 
@@ -137,6 +193,16 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         mMapView = (MapView) this.findViewById(R.id.id_baidu_map);
         mSearchBar = (XSearchBar) this.findViewById(R.id.id_search_bar);
         initMap();
+        initRXBindings();
+//        mLocationClient.start();
+        mRoutePlanSearch = RoutePlanSearch.newInstance();
+        mRoutePlanSearch.setOnGetRoutePlanResultListener(this);
+        PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "西二旗地铁站");
+
+        PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "知春路地铁站");
+        mRoutePlanSearch.drivingSearch((new DrivingRoutePlanOption())
+                .from(stNode)
+                .to(enNode));
     }
 
     private void initMap() {
@@ -147,11 +213,11 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         settings.setCompassEnabled(false);
         mMap.setMyLocationEnabled(true);
         mLocationClient = new LocationClient(XApplication.getContext());
-        mLocationClient.registerLocationListener(this);
         setLocationClient();
+        mLocationClient.registerLocationListener(this);
     }
 
-    private void initCity() {
+    private void locateCity() {
         PackageManager packageManager = getPackageManager();
         boolean permission1 = (PackageManager.PERMISSION_GRANTED == packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", XConstants.PACKAGE_NAME));
         boolean permission2 = (PackageManager.PERMISSION_GRANTED == packageManager.checkPermission("android.permission.ACCESS_COARSE_LOCATION", XConstants.PACKAGE_NAME));
@@ -159,8 +225,10 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
             Geocoder gc = new Geocoder(this, Locale.CHINA);
             List<Address> result = gc.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
             if (Utils.checkEmptyList(result)) {
+                Log.i(XConstants.TAG_MAIN, "locateCity: Get Current City !!!!!!");
                 for (Address address : result) {
                     mCurrentCityName = address.getLocality().replace("市", "");
+                    Log.i(XConstants.TAG_MAIN, "locateCity: " + mCurrentCityName);
                 }
             }
         } catch (Exception e) {
@@ -168,11 +236,15 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         }
     }
 
+    private void initRXBindings() {
+
+    }
+
     private void setLocationClient() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setCoorType("bd0911");
-        option.setScanSpan(2000);
+//        option.setScanSpan(2000);
         option.setOpenGps(true);
         option.setEnableSimulateGps(true);
         mLocationClient.setLocOption(option);

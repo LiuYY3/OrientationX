@@ -11,11 +11,15 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:clickable="true"
-        android:focusable="true">
-    </com.baidu.mapapi.map.MapView>
+        android:focusable="true"/>
 
     <include
         android:id="@+id/id_head_layout"
         layout="@layout/ui_share_title"/>
+
+    <com.xmb.orientationx.component.XSearchBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dimen_status_bar_height"/>
 
 </RelativeLayout>

@@ -36,4 +36,11 @@ public class Utils {
         return list != null && list.size() > 0;
     }
 
+    public static String nullCity(String city) {
+        if (city == null) {
+            return "全国";
+        }
+        return city;
+    }
+
 }

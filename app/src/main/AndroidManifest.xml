@@ -45,8 +45,6 @@
             android:value="Bm3ApbAWfbp6ezLgugB3IVHV8OZex109" />
 
         <activity android:name="com.xmb.orientationx.activity.XBaseActivity"/>
-        <activity android:name=".activity.XMapActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activity.XMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 

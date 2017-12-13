@@ -4,6 +4,9 @@
     <dimen name="dimen_common_side_margin">16dp</dimen>
     <dimen name="dimen_search_bar_margin">8dp</dimen>
     <dimen name="dimen_small_margin">4dp</dimen>
+    <dimen name="dimen_result_height">25dp</dimen>
+    <dimen name="dimen_status_bar_height">24dp</dimen>
+    <dimen name="dimen_edit_height">40dp</dimen>
 
     <!--text size-->
     <dimen name="dimen_input_txt_size">24sp</dimen>

@@ -6,13 +6,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorClose">
+    android:background="@color/colorTransparent">
 
     <RelativeLayout
         android:id="@+id/id_search_layout"
         android:layout_margin="@dimen/dimen_search_bar_margin"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/dimen_edit_height"
         android:background="@android:color/white">
 
         <ImageView
