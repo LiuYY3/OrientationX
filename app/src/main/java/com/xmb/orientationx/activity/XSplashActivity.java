@@ -9,12 +9,10 @@ import android.widget.TextView;
 import com.githang.statusbar.StatusBarCompat;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.exception.XBaseException;
-import com.xmb.orientationx.utils.PermissionUtil;
+import com.xmb.orientationx.utils.XPermissionUtils;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import rx.functions.Action1;
@@ -56,7 +54,7 @@ public class XSplashActivity extends XBaseActivity implements Runnable {
     }
 
     private void initPermissions() {
-        PermissionUtil.checkPermissions(this, new Action1<Boolean>() {
+        XPermissionUtils.checkPermissions(this, new Action1<Boolean>() {
             @Override
             public void call(final Boolean aBoolean) {
                 ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(10);

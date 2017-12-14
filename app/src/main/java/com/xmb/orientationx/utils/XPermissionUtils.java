@@ -9,10 +9,10 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import rx.functions.Action1;
 
 /**
- * PermissionUtil.
+ * XPermissionUtils.
  * @author 徐梦笔
  */
-public class PermissionUtil {
+public class XPermissionUtils {
 
     public static void checkPermissions(@NonNull Activity context, @NonNull Action1<Boolean> listener) {
         new RxPermissions(context)

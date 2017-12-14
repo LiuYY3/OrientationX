@@ -12,7 +12,7 @@ import java.util.List;
  * Created by lym on 2017/11/12.
  */
 
-public class Utils {
+public class XUtils {
 
     public static String getJson(Context context, String filename) {
         StringBuilder stringBuilder = new StringBuilder();

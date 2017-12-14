@@ -43,7 +43,7 @@ import com.xmb.orientationx.application.XApplication;
 import com.xmb.orientationx.component.XSearchBar;
 import com.xmb.orientationx.constant.XConstants;
 import com.xmb.orientationx.exception.XBaseException;
-import com.xmb.orientationx.utils.Utils;
+import com.xmb.orientationx.utils.XUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -172,11 +172,11 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     @Override
     public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
-//        if (Utils.checkEmptyList(drivingRouteResult.getRouteLines())) {
+//        if (XUtils.checkEmptyList(drivingRouteResult.getRouteLines())) {
 //            DrivingRouteLine drive = drivingRouteResult.getRouteLines().get(0);
-//            if (Utils.checkEmptyList(drive.getAllStep())) {
+//            if (XUtils.checkEmptyList(drive.getAllStep())) {
 //                for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
-//                    if (Utils.checkEmptyList(step.getWayPoints())) {
+//                    if (XUtils.checkEmptyList(step.getWayPoints())) {
 //                        for (LatLng ll : step.getWayPoints()) {
 //                            Log.i(XConstants.TAG_MAIN, "onGetDrivingRouteResult: " + ll.latitude + " : " + ll.longitude);
 //                        }
@@ -201,7 +201,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     @Override
     public void onGetSuggestionResult(SuggestionResult suggestionResult) {
-        if (Utils.checkEmptyList(suggestionResult.getAllSuggestions())) {
+        if (XUtils.checkEmptyList(suggestionResult.getAllSuggestions())) {
             for (SuggestionResult.SuggestionInfo suggestionInfo : suggestionResult.getAllSuggestions()) {
                 Log.i(XConstants.TAG_MAIN, "onGetSuggestionResult: " + suggestionInfo.city + " : " + suggestionInfo.key);
             }
@@ -268,7 +268,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         try {
             Geocoder gc = new Geocoder(this, Locale.CHINA);
             List<Address> result = gc.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
-            if (Utils.checkEmptyList(result)) {
+            if (XUtils.checkEmptyList(result)) {
                 Log.i(XConstants.TAG_MAIN, "locateCity: Get Current City !!!!!!");
                 for (Address address : result) {
                     mCurrentCityName = address.getLocality().replace("市", "");
