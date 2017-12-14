@@ -46,10 +46,4 @@
         android:textSize="@dimen/dimen_right_side_size"
         android:visibility="gone"/>
 
-    <com.xmb.orientationx.component.XSearchBar
-        android:id="@+id/id_search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
 </RelativeLayout>

@@ -1,13 +1,16 @@
 package com.xmb.orientationx.activity;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -17,29 +20,24 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.map.Polyline;
-import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
-import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.route.BikingRouteResult;
-import com.baidu.mapapi.search.route.DrivingRouteLine;
-import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.IndoorRouteResult;
 import com.baidu.mapapi.search.route.MassTransitRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
-import com.baidu.mapapi.search.route.PlanNode;
-import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
-import com.baidu.mapapi.search.route.WalkingRouteLine;
-import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import com.jakewharton.rxbinding.view.RxView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.application.XApplication;
 import com.xmb.orientationx.component.XSearchBar;
@@ -50,22 +48,33 @@ import com.xmb.orientationx.utils.Utils;
 import java.util.List;
 import java.util.Locale;
 
+import rx.functions.Action1;
+
 /**
  * XMainActivity.
  * extends from {@link XBaseActivity}
  * @author 徐梦笔
  */
-public class XMainActivity extends XBaseActivity implements BDLocationListener, OnGetRoutePlanResultListener {
+public class XMainActivity extends XBaseActivity implements BDLocationListener,
+        OnGetRoutePlanResultListener,
+        TextWatcher,
+        OnGetSuggestionResultListener,
+        OnGetPoiSearchResultListener {
 
     private BDLocation mCurrentLocation;
     private BDLocation mDestinationLocation;
     private MapView mMapView;
     private BaiduMap mMap;
     private XSearchBar mSearchBar;
+    private RecyclerView mHistoryList;
+    private EditText mInputText;
+    private ImageView mSearchIcon;
     private String mCurrentCityName;
     private LocationClient mLocationClient;
-    private RoutePlanSearch mRoutePlanSearch;
-    private Polyline mPolyline;
+//    private RoutePlanSearch mRoutePlanSearch;
+//    private Polyline mPolyline;
+    private SuggestionSearch mSuggestionSearch;
+    private PoiSearch mPoiSearch;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
@@ -79,7 +88,8 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         super.onDestroyBase();
         mLocationClient.stop();
         mMapView.onDestroy();
-        mSearchBar.mInputEditText.removeTextChangedListener(mSearchBar);
+        mInputText.removeTextChangedListener(this);
+        mSuggestionSearch.destroy();
     }
 
     @Override
@@ -107,6 +117,24 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
     @Override
     public void onRestartBase() throws XBaseException {
         super.onRestartBase();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        Log.i(XConstants.TAG_MAIN, "afterTextChanged: " + mInputText.getText());
+        mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
+                .keyword(mInputText.getText().toString())
+                .city(mCurrentCityName));
     }
 
     /**
@@ -144,21 +172,21 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
 
     @Override
     public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
-        if (Utils.checkEmptyList(drivingRouteResult.getRouteLines())) {
-            DrivingRouteLine drive = drivingRouteResult.getRouteLines().get(0);
-            if (Utils.checkEmptyList(drive.getAllStep())) {
-                for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
-                    if (Utils.checkEmptyList(step.getWayPoints())) {
-                        for (LatLng ll : step.getWayPoints()) {
-                            Log.i(XConstants.TAG_MAIN, "onGetDrivingRouteResult: " + ll.latitude + " : " + ll.longitude);
-                        }
-                        OverlayOptions ooPolyline = new PolylineOptions().width(5)
-                                .color(0xAAFF0000).points(step.getWayPoints());
-                        mPolyline = (Polyline) mMap.addOverlay(ooPolyline);
-                    }
-                }
-            }
-        }
+//        if (Utils.checkEmptyList(drivingRouteResult.getRouteLines())) {
+//            DrivingRouteLine drive = drivingRouteResult.getRouteLines().get(0);
+//            if (Utils.checkEmptyList(drive.getAllStep())) {
+//                for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
+//                    if (Utils.checkEmptyList(step.getWayPoints())) {
+//                        for (LatLng ll : step.getWayPoints()) {
+//                            Log.i(XConstants.TAG_MAIN, "onGetDrivingRouteResult: " + ll.latitude + " : " + ll.longitude);
+//                        }
+//                        OverlayOptions ooPolyline = new PolylineOptions().width(5)
+//                                .color(0xAAFF0000).points(step.getWayPoints());
+//                        mPolyline = (Polyline) mMap.addOverlay(ooPolyline);
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -171,20 +199,54 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
 
     }
 
+    @Override
+    public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+        if (Utils.checkEmptyList(suggestionResult.getAllSuggestions())) {
+            for (SuggestionResult.SuggestionInfo suggestionInfo : suggestionResult.getAllSuggestions()) {
+                Log.i(XConstants.TAG_MAIN, "onGetSuggestionResult: " + suggestionInfo.city + " : " + suggestionInfo.key);
+            }
+        }
+    }
+
+    @Override
+    public void onGetPoiResult(PoiResult poiResult) {
+
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+
+    }
+
+    @Override
+    public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+
+    }
+
     private void initViews() {
         mMapView = (MapView) this.findViewById(R.id.id_baidu_map);
         mSearchBar = (XSearchBar) this.findViewById(R.id.id_search_bar);
+        mInputText = (EditText) this.findViewById(R.id.id_search_txt);
+        mSearchIcon = (ImageView) this.findViewById(R.id.id_search_img);
+        mHistoryList = (RecyclerView) this.findViewById(R.id.id_search_history_list);
+        showList();
+        mSearchIcon.setVisibility(View.GONE);
         initMap();
         initRXBindings();
-//        mLocationClient.start();
-        mRoutePlanSearch = RoutePlanSearch.newInstance();
-        mRoutePlanSearch.setOnGetRoutePlanResultListener(this);
-        PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "西二旗地铁站");
-
-        PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "知春路地铁站");
-        mRoutePlanSearch.drivingSearch((new DrivingRoutePlanOption())
-                .from(stNode)
-                .to(enNode));
+        mLocationClient.start();
+        mInputText.addTextChangedListener(XMainActivity.this);
+        mSuggestionSearch = SuggestionSearch.newInstance();
+        mSuggestionSearch.setOnGetSuggestionResultListener(this);
+        mPoiSearch = PoiSearch.newInstance();
+        mPoiSearch.setOnGetPoiSearchResultListener(this);
+//        mRoutePlanSearch = RoutePlanSearch.newInstance();
+//        mRoutePlanSearch.setOnGetRoutePlanResultListener(this);
+//        PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "西二旗地铁站");
+//
+//        PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "知春路地铁站");
+//        mRoutePlanSearch.drivingSearch((new DrivingRoutePlanOption())
+//                .from(stNode)
+//                .to(enNode));
     }
 
     private void initMap() {
@@ -219,7 +281,13 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
     }
 
     private void initRXBindings() {
-
+        RxView.clicks(mInputText).subscribe(new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                Log.i(XConstants.TAG_MAIN, "call: activate search bar !!!!");
+                mSearchIcon.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void setLocationClient() {
@@ -241,6 +309,14 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         mMap.setMyLocationData(locData);
         MyLocationConfiguration config = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null);
         mMap.setMyLocationConfiguration(config);
+    }
+
+    private void showList() {
+        if (mInputText.getText().length() == 0) {
+            mHistoryList.setVisibility(View.GONE);
+        } else {
+            mHistoryList.setVisibility(View.VISIBLE);
+        }
     }
 
 }
