@@ -79,8 +79,6 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         super.onDestroyBase();
         mLocationClient.stop();
         mMapView.onDestroy();
-        mSearchBar.mPoiSearch.destroy();
-        mSearchBar.mSuggestionSearch.destroy();
         mSearchBar.mInputEditText.removeTextChangedListener(mSearchBar);
     }
 
@@ -126,28 +124,12 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
         Log.i(XConstants.TAG_MAIN, "onReceiveLocation: " + bdLocation.getLatitude() + " : " + bdLocation.getLongitude() + " : " + bdLocation.getGpsAccuracyStatus());
         mCurrentLocation = bdLocation;
         locateCity();
-        mSearchBar.setCity(mCurrentCityName);
         setCurrentLocation();
     }
 
     @Override
     public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
-//        if (Utils.checkEmptyList(walkingRouteResult.getRouteLines())) {
-//            for (WalkingRouteLine walk : walkingRouteResult.getRouteLines()) {
-//                if (Utils.checkEmptyList(walk.getAllStep())) {
-//                    for (WalkingRouteLine.WalkingStep step : walk.getAllStep()) {
-//                        if (Utils.checkEmptyList(step.getWayPoints())) {
-//                            for (LatLng ll : step.getWayPoints()) {
-//                                Log.i(XConstants.TAG_MAIN, "onGetWalkingRouteResult: " + ll.latitude + " : " + ll.longitude);
-//                            }
-//                            OverlayOptions ooPolyline = new PolylineOptions().width(20)
-//                                    .color(0xAAFF0000).points(step.getWayPoints());
-//                            mPolyline = (Polyline) mMap.addOverlay(ooPolyline);
-//                        }
-//                    }
-//                }
-//            }
-//        }
+
     }
 
     @Override
@@ -163,9 +145,9 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener, 
     @Override
     public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
         if (Utils.checkEmptyList(drivingRouteResult.getRouteLines())) {
-            DrivingRouteLine walk = drivingRouteResult.getRouteLines().get(0);
-            if (Utils.checkEmptyList(walk.getAllStep())) {
-                for (DrivingRouteLine.DrivingStep step : walk.getAllStep()) {
+            DrivingRouteLine drive = drivingRouteResult.getRouteLines().get(0);
+            if (Utils.checkEmptyList(drive.getAllStep())) {
+                for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
                     if (Utils.checkEmptyList(step.getWayPoints())) {
                         for (LatLng ll : step.getWayPoints()) {
                             Log.i(XConstants.TAG_MAIN, "onGetDrivingRouteResult: " + ll.latitude + " : " + ll.longitude);

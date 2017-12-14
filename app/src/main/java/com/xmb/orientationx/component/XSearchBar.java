@@ -51,9 +51,6 @@ public class XSearchBar extends FrameLayout implements OnGetPoiSearchResultListe
     private LinearLayout mSearchBaseLayout;
     private RecyclerView mHistoryListView;
     private ArrayList<PoiInfo> mPoiInfoResultList;
-    public SuggestionSearch mSuggestionSearch;
-    public PoiSearch mPoiSearch;
-    private String mCity;
 
     public XSearchBar(Context context) {
         this(context, null, 0);
@@ -112,14 +109,7 @@ public class XSearchBar extends FrameLayout implements OnGetPoiSearchResultListe
 
     @Override
     public void afterTextChanged(Editable s) {
-        String input = mInputEditText.getText().toString();
-        Log.i(XConstants.TAG_BAR, "afterTextChanged: " + input + " : " + mCity);
-        mCity = Utils.nullCity(mCity);
-        startSearchSuggestions(input);
-    }
 
-    public void setCity(String city) {
-        mCity = city;
     }
 
     private void initViews() {
@@ -130,10 +120,6 @@ public class XSearchBar extends FrameLayout implements OnGetPoiSearchResultListe
         mHistoryListView = (RecyclerView) this.findViewById(R.id.id_search_history_list);
         mSearchImageView.setVisibility(GONE);
         mHistoryListView.setVisibility(GONE);
-        mPoiSearch = PoiSearch.newInstance();
-        mPoiSearch.setOnGetPoiSearchResultListener(this);
-        mSuggestionSearch = SuggestionSearch.newInstance();
-        mSuggestionSearch.setOnGetSuggestionResultListener(this);
         mInputEditText.addTextChangedListener(this);
         initRecyclerView();
         initRXBindings();
@@ -151,12 +137,6 @@ public class XSearchBar extends FrameLayout implements OnGetPoiSearchResultListe
                 mSearchImageView.setVisibility(VISIBLE);
             }
         });
-    }
-
-    private void startSearchSuggestions(String input) {
-        mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
-                .keyword(input)
-                .city(mCity));
     }
 
 }
