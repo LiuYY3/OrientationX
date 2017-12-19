@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,7 +22,9 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
+import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
@@ -35,16 +38,20 @@ import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionResult.SuggestionInfo;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.jakewharton.rxbinding.view.RxView;
 import com.xmb.orientationx.R;
+import com.xmb.orientationx.adaptor.XSearchAdaptor;
 import com.xmb.orientationx.application.XApplication;
 import com.xmb.orientationx.component.XSearchBar;
 import com.xmb.orientationx.constant.XConstants;
 import com.xmb.orientationx.exception.XBaseException;
+import com.xmb.orientationx.utils.XSearchUtils;
 import com.xmb.orientationx.utils.XUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -75,11 +82,18 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 //    private Polyline mPolyline;
     private SuggestionSearch mSuggestionSearch;
     private PoiSearch mPoiSearch;
+    private BDLocation mLastLocation;
+    private XSearchAdaptor mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<SuggestionInfo> mSearchSuggestions, mSearchSubSuggestions, mFinalSuggestions;
+    private ArrayList<PoiInfo> mSearchPoiResults;
+    private MyLocationConfiguration mLocationConfig;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
         super.onCreateBase(savedInstanceState);
         setContentView(R.layout.activity_map);
+        initRecyclerData();
         initViews();
     }
 
@@ -90,6 +104,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         mMapView.onDestroy();
         mInputText.removeTextChangedListener(this);
         mSuggestionSearch.destroy();
+        mPoiSearch.destroy();
     }
 
     @Override
@@ -135,6 +150,9 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                 .keyword(mInputText.getText().toString())
                 .city(mCurrentCityName));
+        mPoiSearch.searchInCity((new PoiCitySearchOption())
+                .keyword(mInputText.getText().toString())
+                .city(mCurrentCityName));
     }
 
     /**
@@ -149,10 +167,19 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
-        Log.i(XConstants.TAG_MAIN, "onReceiveLocation: " + bdLocation.getLatitude() + " : " + bdLocation.getLongitude() + " : " + bdLocation.getGpsAccuracyStatus());
-        mCurrentLocation = bdLocation;
+        Log.i(XConstants.TAG_MAIN, "onReceiveLocation: " + bdLocation.getAddress().address + " : " + bdLocation.getRadius());
+        if (mLastLocation != null) {
+            Log.i(XConstants.TAG_MAIN, "onReceiveLocation: Modify Location");
+            mLocationConfig = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null);
+            mCurrentLocation = bdLocation;
+            setCurrentLocation(mLocationConfig);
+        } else {
+            mLocationConfig = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null);
+            mLastLocation = bdLocation;
+            mCurrentLocation = bdLocation;
+            setCurrentLocation(mLocationConfig);
+        }
         locateCity();
-        setCurrentLocation();
     }
 
     @Override
@@ -201,16 +228,33 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     @Override
     public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+        mSearchSuggestions = new ArrayList<SuggestionInfo>();
+        mSearchSubSuggestions = new ArrayList<SuggestionInfo>();
         if (XUtils.checkEmptyList(suggestionResult.getAllSuggestions())) {
-            for (SuggestionResult.SuggestionInfo suggestionInfo : suggestionResult.getAllSuggestions()) {
+            for (SuggestionInfo suggestionInfo : suggestionResult.getAllSuggestions()) {
                 Log.i(XConstants.TAG_MAIN, "onGetSuggestionResult: " + suggestionInfo.city + " : " + suggestionInfo.key);
+                if (!suggestionInfo.city.contains(mCurrentCityName)) {
+                    mSearchSubSuggestions.add(suggestionInfo);
+                } else {
+                    mSearchSuggestions.add(suggestionInfo);
+                }
             }
+            mFinalSuggestions = XSearchUtils.getBestResults(mSearchSuggestions, mSearchSubSuggestions);
+            mAdapter.updateSuggestions(mFinalSuggestions);
+        } else {
+            mAdapter.updateSuggestions(new ArrayList<SuggestionInfo>());
         }
     }
 
     @Override
     public void onGetPoiResult(PoiResult poiResult) {
-
+        mSearchPoiResults = new ArrayList<PoiInfo>();
+        if (XUtils.checkEmptyList(poiResult.getAllPoi())) {
+            mSearchPoiResults.addAll(poiResult.getAllPoi());
+            mAdapter.updatePoiResults(mSearchPoiResults);
+        } else {
+            mAdapter.updatePoiResults(new ArrayList<PoiInfo>());
+        }
     }
 
     @Override
@@ -223,13 +267,19 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     }
 
+    private void initRecyclerData() {
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mAdapter = new XSearchAdaptor(mFinalSuggestions, mSearchPoiResults);
+    }
+
     private void initViews() {
         mMapView = (MapView) this.findViewById(R.id.id_baidu_map);
         mSearchBar = (XSearchBar) this.findViewById(R.id.id_search_bar);
         mInputText = (EditText) this.findViewById(R.id.id_search_txt);
         mSearchIcon = (ImageView) this.findViewById(R.id.id_search_img);
         mHistoryList = (RecyclerView) this.findViewById(R.id.id_search_history_list);
-        showList();
+        mHistoryList.setLayoutManager(mLayoutManager);
+        mHistoryList.setAdapter(mAdapter);
         mSearchIcon.setVisibility(View.GONE);
         initMap();
         initRXBindings();
@@ -269,10 +319,9 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
             Geocoder gc = new Geocoder(this, Locale.CHINA);
             List<Address> result = gc.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
             if (XUtils.checkEmptyList(result)) {
-                Log.i(XConstants.TAG_MAIN, "locateCity: Get Current City !!!!!!");
                 for (Address address : result) {
                     mCurrentCityName = address.getLocality().replace("市", "");
-                    Log.i(XConstants.TAG_MAIN, "locateCity: " + mCurrentCityName);
+                    Log.d(XConstants.TAG_MAIN, "locateCity: " + mCurrentCityName);
                 }
             }
         } catch (Exception e) {
@@ -284,30 +333,38 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         RxView.clicks(mInputText).subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
-                Log.i(XConstants.TAG_MAIN, "call: activate search bar !!!!");
                 mSearchIcon.setVisibility(View.VISIBLE);
             }
         });
+
+        RxView.clicks(mSearchIcon).subscribe(new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+
+            }
+        });
+
     }
 
     private void setLocationClient() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setCoorType("bd0911");
-//        option.setScanSpan(2000);
+        option.setScanSpan(1000);
+        option.disableCache(true);
         option.setOpenGps(true);
-        option.setEnableSimulateGps(true);
+        option.setIsNeedAddress(true);
+        option.setIgnoreKillProcess(false);
         mLocationClient.setLocOption(option);
     }
 
-    private void setCurrentLocation() {
-        Log.i(XConstants.TAG_MAIN, "setCurrentLocation: " + mCurrentLocation.getLatitude() + "; " + mCurrentLocation.getLongitude());
+    private void setCurrentLocation(MyLocationConfiguration config) {
         MyLocationData locData = new MyLocationData.Builder()
                 .accuracy(mCurrentLocation.getRadius())
                 .latitude(mCurrentLocation.getLatitude())
                 .longitude(mCurrentLocation.getLongitude()).build();
         mMap.setMyLocationData(locData);
-        MyLocationConfiguration config = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null);
+
         mMap.setMyLocationConfiguration(config);
     }
 

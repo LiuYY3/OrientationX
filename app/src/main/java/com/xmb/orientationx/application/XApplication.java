@@ -3,6 +3,7 @@ package com.xmb.orientationx.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
 /**
@@ -26,6 +27,7 @@ public class XApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SDKInitializer.initialize(this);
+        SDKInitializer.setCoordType(CoordType.GCJ02);
         mContext = getApplicationContext();
     }
 
