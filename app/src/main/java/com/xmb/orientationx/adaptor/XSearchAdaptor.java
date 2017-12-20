@@ -52,7 +52,7 @@ public class XSearchAdaptor extends RecyclerView.Adapter<XSearchViewHolder>{
     public void onBindViewHolder(final XSearchViewHolder holder, final int position) {
         holder.mUnderLineView.setVisibility(View.VISIBLE);
         ArrayList<String> sugKeys = new ArrayList<String>();
-        if (position == getItemCount()) {
+        if (position == getItemCount() - 1) {
             holder.mUnderLineView.setVisibility(View.GONE);
         }
         if (XUtils.checkEmptyList(mSuggestions)) {

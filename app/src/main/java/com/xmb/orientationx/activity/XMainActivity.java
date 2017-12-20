@@ -1,6 +1,10 @@
 package com.xmb.orientationx.activity;
 
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -66,7 +70,8 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         OnGetRoutePlanResultListener,
         TextWatcher,
         OnGetSuggestionResultListener,
-        OnGetPoiSearchResultListener {
+        OnGetPoiSearchResultListener,
+        SensorEventListener {
 
     private BDLocation mCurrentLocation;
     private BDLocation mDestinationLocation;
@@ -88,6 +93,9 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     private ArrayList<SuggestionInfo> mSearchSuggestions, mSearchSubSuggestions, mFinalSuggestions;
     private ArrayList<PoiInfo> mSearchPoiResults;
     private MyLocationConfiguration mLocationConfig;
+    private SensorManager mSensorManager;
+    private Sensor mGyroscopeSensor;
+    private Float mDirection;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
@@ -105,6 +113,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         mInputText.removeTextChangedListener(this);
         mSuggestionSearch.destroy();
         mPoiSearch.destroy();
+        mSensorManager.unregisterListener(this);
     }
 
     @Override
@@ -165,6 +174,49 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     }
 
+    /**
+     * Called when there is a new sensor event.  Note that "on changed"
+     * is somewhat of a misnomer, as this will also be called if we have a
+     * new reading from a sensor with the exact same sensor values (but a
+     * newer timestamp).
+     * <p>
+     * <p>See {@link SensorManager SensorManager}
+     * for details on possible sensor types.
+     * <p>See also {@link SensorEvent SensorEvent}.
+     * <p>
+     * <p><b>NOTE:</b> The application doesn't own the
+     * {@link SensorEvent event}
+     * object passed as a parameter and therefore cannot hold on to it.
+     * The object may be part of an internal pool and may be reused by
+     * the framework.
+     *
+     * @param event the {@link SensorEvent SensorEvent}.
+     */
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            mDirection = (float) Math.toDegrees(event.values[2]);
+            Log.i(XConstants.TAG_MAIN, "onSensorChanged: " + mDirection);
+            setCurrentLocation(mLocationConfig);
+        }
+    }
+
+    /**
+     * Called when the accuracy of the registered sensor has changed.  Unlike
+     * onSensorChanged(), this is only called when this accuracy value changes.
+     * <p>
+     * <p>See the SENSOR_STATUS_* constants in
+     * {@link SensorManager SensorManager} for details.
+     *
+     * @param sensor
+     * @param accuracy The new accuracy of this sensor, one of
+     *                 {@code SensorManager.SENSOR_STATUS_*}
+     */
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
         Log.i(XConstants.TAG_MAIN, "onReceiveLocation: " + bdLocation.getAddress().address + " : " + bdLocation.getRadius());
@@ -172,12 +224,14 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
             Log.i(XConstants.TAG_MAIN, "onReceiveLocation: Modify Location");
             mLocationConfig = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null);
             mCurrentLocation = bdLocation;
-            setCurrentLocation(mLocationConfig);
         } else {
             mLocationConfig = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null);
             mLastLocation = bdLocation;
             mCurrentLocation = bdLocation;
-            setCurrentLocation(mLocationConfig);
+            if (mSensorManager != null) {
+                mGyroscopeSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+                mSensorManager.registerListener(this, mGyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            }
         }
         locateCity();
     }
@@ -273,6 +327,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     }
 
     private void initViews() {
+        mSensorManager = (SensorManager)this.getSystemService(SENSOR_SERVICE);
         mMapView = (MapView) this.findViewById(R.id.id_baidu_map);
         mSearchBar = (XSearchBar) this.findViewById(R.id.id_search_bar);
         mInputText = (EditText) this.findViewById(R.id.id_search_txt);
@@ -359,12 +414,20 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     }
 
     private void setCurrentLocation(MyLocationConfiguration config) {
-        MyLocationData locData = new MyLocationData.Builder()
-                .accuracy(mCurrentLocation.getRadius())
-                .latitude(mCurrentLocation.getLatitude())
-                .longitude(mCurrentLocation.getLongitude()).build();
-        mMap.setMyLocationData(locData);
-
+        if (mDirection == null) {
+            MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(mCurrentLocation.getRadius())
+                    .latitude(mCurrentLocation.getLatitude())
+                    .longitude(mCurrentLocation.getLongitude()).build();
+            mMap.setMyLocationData(locData);
+        } else {
+            MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(mCurrentLocation.getRadius())
+                    .direction(mDirection)
+                    .latitude(mCurrentLocation.getLatitude())
+                    .longitude(mCurrentLocation.getLongitude()).build();
+            mMap.setMyLocationData(locData);
+        }
         mMap.setMyLocationConfiguration(config);
     }
 
