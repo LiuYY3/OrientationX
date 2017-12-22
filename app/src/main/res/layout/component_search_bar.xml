@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/id_search_base"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -15,19 +14,10 @@
         android:layout_height="@dimen/dimen_edit_height"
         android:background="@android:color/white">
 
-        <ImageView
-            android:id="@+id/id_search_img"
-            android:contentDescription="@string/app_content_description"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/dimen_small_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_search"/>
-
         <EditText
             android:id="@+id/id_search_txt"
             android:layout_marginStart="@dimen/dimen_search_bar_margin"
-            android:layout_toStartOf="@id/id_search_img"
+            android:layout_alignParentStart="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:imeOptions="actionDone"

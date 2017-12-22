@@ -1,5 +1,6 @@
 package com.xmb.orientationx.model;
 
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.sug.SuggestionResult.SuggestionInfo;
 
@@ -12,23 +13,22 @@ import java.io.Serializable;
  */
 public class SearchInfo implements Serializable {
 
-    private SuggestionInfo suggest;
-    private PoiInfo poi;
+    private LatLng pt;
+    private String name;
 
-    public SuggestionInfo getSuggest() {
-        return suggest;
+    public LatLng getPt() {
+        return pt;
     }
 
-    public void setSuggest(SuggestionInfo suggest) {
-        this.suggest = suggest;
+    public void setPt(LatLng pt) {
+        this.pt = pt;
     }
 
-    public PoiInfo getPoi() {
-        return poi;
+    public String getName() {
+        return name;
     }
 
-    public void setPoi(PoiInfo poi) {
-        this.poi = poi;
+    public void setName(String name) {
+        this.name = name;
     }
-
 }

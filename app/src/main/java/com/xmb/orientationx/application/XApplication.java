@@ -12,8 +12,6 @@ import com.baidu.mapapi.SDKInitializer;
  */
 public class XApplication extends Application {
 
-    private static Context mContext;
-
     /**
      * Called when the application is starting, before any activity, service,
      * or receiver objects (excluding content providers) have been created.
@@ -28,11 +26,6 @@ public class XApplication extends Application {
         super.onCreate();
         SDKInitializer.initialize(this);
         SDKInitializer.setCoordType(CoordType.GCJ02);
-        mContext = getApplicationContext();
-    }
-
-    public static Context getContext() {
-        return mContext;
     }
 
 }
