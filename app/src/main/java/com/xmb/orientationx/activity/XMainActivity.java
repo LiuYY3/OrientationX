@@ -44,6 +44,7 @@ import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
@@ -193,7 +194,18 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     @Override
     public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
-
+        if (XUtils.checkEmptyList(walkingRouteResult.getRouteLines())) {
+            WalkingRouteLine walk = walkingRouteResult.getRouteLines().get(0);
+            if (XUtils.checkEmptyList(walk.getAllStep())) {
+                for (WalkingRouteLine.WalkingStep step : walk.getAllStep()) {
+                    if (XUtils.checkEmptyList(step.getWayPoints())) {
+                        OverlayOptions polyline = new PolylineOptions().width(5)
+                                .color(0xAAFF0000).points(step.getWayPoints());
+                        mMap.addOverlay(polyline);
+                    }
+                }
+            }
+        }
     }
 
     @Override
