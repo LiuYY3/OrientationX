@@ -43,6 +43,7 @@ import com.baidu.mapapi.search.route.MassTransitRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
@@ -200,7 +201,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
                 for (WalkingRouteLine.WalkingStep step : walk.getAllStep()) {
                     if (XUtils.checkEmptyList(step.getWayPoints())) {
                         OverlayOptions polyline = new PolylineOptions().width(5)
-                                .color(0xAAFF0000).points(step.getWayPoints());
+                                .color(getResources().getColor(R.color.colorBlue)).points(step.getWayPoints());
                         mMap.addOverlay(polyline);
                     }
                 }
@@ -210,7 +211,18 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     @Override
     public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
-
+        if (XUtils.checkEmptyList(transitRouteResult.getRouteLines())) {
+            TransitRouteLine walk = transitRouteResult.getRouteLines().get(0);
+            if (XUtils.checkEmptyList(walk.getAllStep())) {
+                for (TransitRouteLine.TransitStep step : walk.getAllStep()) {
+                    if (XUtils.checkEmptyList(step.getWayPoints())) {
+                        OverlayOptions polyline = new PolylineOptions().width(5)
+                                .color(getResources().getColor(R.color.colorGreen)).points(step.getWayPoints());
+                        mMap.addOverlay(polyline);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -226,7 +238,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
                 for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
                     if (XUtils.checkEmptyList(step.getWayPoints())) {
                         OverlayOptions polyline = new PolylineOptions().width(5)
-                                .color(0xAAFF0000).points(step.getWayPoints());
+                                .color(getResources().getColor(R.color.colorRed)).points(step.getWayPoints());
                         mMap.addOverlay(polyline);
                     }
                 }
