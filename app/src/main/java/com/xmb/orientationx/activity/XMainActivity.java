@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,12 +53,14 @@ import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionResult.SuggestionInfo;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
 import com.jakewharton.rxbinding.view.RxView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.adaptor.XSearchAdaptor;
 import com.xmb.orientationx.adaptor.XSearchAdaptor.ItemSelectedListener;
 import com.xmb.orientationx.component.XSearchBar;
 import com.xmb.orientationx.constant.XConstants;
+import com.xmb.orientationx.constant.XTags;
 import com.xmb.orientationx.exception.XBaseException;
 import com.xmb.orientationx.model.SearchInfo;
 import com.xmb.orientationx.utils.XSearchUtils;
@@ -160,6 +163,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     @Override
     public void afterTextChanged(Editable s) {
+        Log.i(XTags.TAG_MAIN, "afterTextChanged: " + mInputText.getText());
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                 .keyword(mInputText.getText().toString())
                 .city(mCurrentCityName));
@@ -377,6 +381,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
             if (XUtils.checkEmptyList(result)) {
                 for (Address address : result) {
                     mCurrentCityName = address.getLocality().replace("市", "");
+                    Log.i(XTags.TAG_MAIN, "locateCity: " + mCurrentCityName);
                 }
             }
         } catch (Exception e) {
@@ -400,9 +405,11 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
                 PlanNode stNode = PlanNode.withCityNameAndPlaceName(mCurrentCityName, mCurrentLocation.getAddrStr());
 
                 PlanNode enNode = PlanNode.withCityNameAndPlaceName(mCurrentCityName, mDestination);
-                mRoutePlanSearch.drivingSearch((new DrivingRoutePlanOption())
-                        .from(stNode)
-                        .to(enNode));
+//                mRoutePlanSearch.drivingSearch((new DrivingRoutePlanOption())
+//                        .from(stNode)
+//                        .to(enNode));
+                LatLng ll = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                WalkNaviLaunchParam param = new WalkNaviLaunchParam().stPt(ll).endPt(mDestinationLL);
             }
         });
     }

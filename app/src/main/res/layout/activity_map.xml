@@ -21,9 +21,9 @@
         android:id="@+id/id_guide_img"
         android:contentDescription="@string/app_content_description"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimen_search_bar_margin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_route_icon_bot"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/navigate"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/dimen_search_bar_margin"/>
