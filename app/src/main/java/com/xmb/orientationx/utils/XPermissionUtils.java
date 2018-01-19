@@ -4,9 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
-import com.tbruyelle.rxpermissions.RxPermissions;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
 
 /**
  * XPermissionUtils.
@@ -14,7 +14,7 @@ import rx.functions.Action1;
  */
 public class XPermissionUtils {
 
-    public static void checkPermissions(@NonNull Activity context, @NonNull Action1<Boolean> listener) {
+    public static void checkPermissions(@NonNull Activity context, @NonNull Consumer<Boolean> listener) {
         new RxPermissions(context)
                 .request(Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION,

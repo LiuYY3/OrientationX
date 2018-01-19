@@ -7,7 +7,6 @@
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/id_baidu_map"
-        android:fitsSystemWindows="true"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:clickable="true"
@@ -41,7 +40,6 @@
     <com.xmb.orientationx.component.XSearchBar
         android:id="@+id/id_search_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dimen_status_bar_height"/>
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

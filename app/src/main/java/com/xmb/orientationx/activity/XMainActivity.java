@@ -37,7 +37,6 @@ import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.route.BikingRouteResult;
 import com.baidu.mapapi.search.route.DrivingRouteLine;
-import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.IndoorRouteResult;
 import com.baidu.mapapi.search.route.MassTransitRouteResult;
@@ -54,7 +53,7 @@ import com.baidu.mapapi.search.sug.SuggestionResult.SuggestionInfo;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
-import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.adaptor.XSearchAdaptor;
 import com.xmb.orientationx.adaptor.XSearchAdaptor.ItemSelectedListener;
@@ -70,7 +69,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import rx.functions.Action1;
+import butterknife.BindView;
+import io.reactivex.functions.Consumer;
 
 /**
  * XMainActivity.
@@ -84,13 +84,22 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         OnGetPoiSearchResultListener,
         ItemSelectedListener {
 
+    @BindView(R.id.id_baidu_map)
+    MapView mMapView;
+    @BindView(R.id.id_search_bar)
+    XSearchBar mSearchBar;
+    @BindView(R.id.id_search_history_list)
+    RecyclerView mHistoryList;
+    @BindView(R.id.id_search_txt)
+    EditText mInputText;
+    @BindView(R.id.id_guide_img)
+    ImageView mGuideImageView;
+    @BindView(R.id.id_gps_img)
+    ImageView mGpsImageView;
+
     private BDLocation mCurrentLocation;
     private LatLng mDestinationLL;
-    private MapView mMapView;
     private BaiduMap mMap;
-    private XSearchBar mSearchBar;
-    private RecyclerView mHistoryList;
-    private EditText mInputText;
     private String mCurrentCityName;
     private LocationClient mLocationClient;
     private RoutePlanSearch mRoutePlanSearch;
@@ -104,7 +113,6 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     private ArrayList<SearchInfo> mSearchResults;
     private MyLocationConfiguration mLocationConfig;
     private String mDestination;
-    private ImageView mGuideImageView, mGpsImageView;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
@@ -340,12 +348,6 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     }
 
     private void initViews() {
-        mMapView = (MapView) this.findViewById(R.id.id_baidu_map);
-        mSearchBar = (XSearchBar) this.findViewById(R.id.id_search_bar);
-        mInputText = (EditText) this.findViewById(R.id.id_search_txt);
-        mHistoryList = (RecyclerView) this.findViewById(R.id.id_search_history_list);
-        mGuideImageView = (ImageView) this.findViewById(R.id.id_guide_img);
-        mGpsImageView = (ImageView) this.findViewById(R.id.id_gps_img);
         mGpsImageView.setVisibility(View.GONE);
         mGuideImageView.setVisibility(View.GONE);
         mHistoryList.setLayoutManager(mLayoutManager);
@@ -390,16 +392,16 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     }
 
     private void initRXBindings() {
-        RxView.clicks(mInputText).subscribe(new Action1<Void>() {
+        RxView.clicks(mInputText).subscribe(new Consumer<Object>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Object o) {
                 mInputText.addTextChangedListener(XMainActivity.this);
             }
         });
 
-        RxView.clicks(mGuideImageView).subscribe(new Action1<Void>() {
+        RxView.clicks(mGuideImageView).subscribe(new Consumer<Object>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Object o) {
                 mRoutePlanSearch = RoutePlanSearch.newInstance();
                 mRoutePlanSearch.setOnGetRoutePlanResultListener(XMainActivity.this);
                 PlanNode stNode = PlanNode.withCityNameAndPlaceName(mCurrentCityName, mCurrentLocation.getAddrStr());

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.adaptor.XSearchAdaptor.ItemSelectedListener;
 
+import butterknife.ButterKnife;
+
 /**
  * XSearchViewHolder.
  * subclass of {@link RecyclerView.ViewHolder}

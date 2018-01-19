@@ -14,6 +14,10 @@ import com.xmb.orientationx.R;
 import com.xmb.orientationx.component.XSearchBar;
 import com.xmb.orientationx.exception.XBaseException;
 
+/**
+ * XBaseActivity.
+ * @author 徐梦笔
+ */
 public class XBaseActivity extends AppCompatActivity {
 
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
