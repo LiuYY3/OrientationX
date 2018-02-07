@@ -17,4 +17,7 @@
     <dimen name="dimen_splash_name">45sp</dimen>
     <dimen name="dimen_splash_author">20sp</dimen>
 
+    <!--num picker-->
+    <dimen name="dimen_margin_30">30dp</dimen>
+
 </resources>

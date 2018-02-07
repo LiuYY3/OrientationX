@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="@color/colorHoloBlue">
 
     <TextView
-        android:id="@+id/id_app_name_txt"
+        android:id="@+id/id_app_author_txt"
         android:padding="@dimen/dimen_common_side_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_author"
         android:layout_centerInParent="true"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/dimen_splash_author"/>
 
     <TextView
-        android:id="@+id/id_app_author_txt"
-        android:layout_above="@id/id_app_name_txt"
+        android:id="@+id/id_app_name_txt"
+        android:layout_above="@id/id_app_author_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:layout_centerInParent="true"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/dimen_splash_name"/>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:layout_marginTop="@dimen/dimen_margin_30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/SpinKitView.Large.FadingCircle"
+        app:SpinKit_Color="@android:color/white"
+        android:layout_below="@id/id_app_author_txt"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

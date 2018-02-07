@@ -32,7 +32,8 @@
         android:roundIcon="@drawable/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.XSplashActivity">
+        <activity
+            android:name=".activity.XSplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,12 +45,17 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="Bm3ApbAWfbp6ezLgugB3IVHV8OZex109" />
 
-        <activity android:name="com.xmb.orientationx.activity.XBaseActivity"/>
-        <activity android:name=".activity.XMainActivity"
+        <activity
+            android:name="com.xmb.orientationx.activity.XBaseActivity"/>
+
+        <activity
+            android:name=".activity.XMainActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
+
     </application>
 
 </manifest>
