@@ -61,7 +61,8 @@ import com.xmb.orientationx.component.XSearchBar;
 import com.xmb.orientationx.constant.XConstants;
 import com.xmb.orientationx.constant.XTags;
 import com.xmb.orientationx.exception.XBaseException;
-import com.xmb.orientationx.model.SearchInfo;
+import com.xmb.orientationx.data.SearchInfo;
+import com.xmb.orientationx.utils.StatusBarUtil;
 import com.xmb.orientationx.utils.XSearchUtils;
 import com.xmb.orientationx.utils.XUtils;
 
@@ -70,6 +71,7 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -117,7 +119,9 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
         super.onCreateBase(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
         initRecyclerData();
         initViews();
     }
@@ -330,7 +334,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
         mGuideImageView.setVisibility(View.VISIBLE);
         mGpsImageView.setVisibility(View.VISIBLE);
         BitmapDescriptor bitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.marker);
+                .fromResource(R.mipmap.marker);
 
         MarkerOptions option = new MarkerOptions()
                 .position(mDestinationLL)

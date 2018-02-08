@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xmb.orientationx.R;
-import com.xmb.orientationx.model.SearchInfo;
+import com.xmb.orientationx.data.SearchInfo;
 import com.xmb.orientationx.viewholder.XSearchViewHolder;
 
 import java.util.ArrayList;

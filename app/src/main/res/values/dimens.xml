@@ -5,7 +5,7 @@
     <dimen name="dimen_search_bar_margin">8dp</dimen>
     <dimen name="dimen_small_margin">4dp</dimen>
     <dimen name="dimen_result_height">25dp</dimen>
-    <dimen name="dimen_status_bar_height">24dp</dimen>
+    <dimen name="dimen_status_bar_top_margin">24dp</dimen>
     <dimen name="dimen_route_icon_bot">30dp</dimen>
     <dimen name="dimen_edit_height">40dp</dimen>
     <dimen name="dimen_guide_top">80dp</dimen>
@@ -20,4 +20,7 @@
     <!--num picker-->
     <dimen name="dimen_margin_30">30dp</dimen>
 
+    <dimen name="dimen_blur_2">2dp</dimen>
+
+    <dimen name="dime_radius_5">5dp</dimen>
 </resources>

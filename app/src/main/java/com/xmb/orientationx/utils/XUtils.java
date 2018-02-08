@@ -3,6 +3,8 @@ package com.xmb.orientationx.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,6 +43,11 @@ public class XUtils {
             return "全国";
         }
         return city;
+    }
+
+    public static String objToString(Object o) {
+        Gson gson = new Gson();
+        return gson.toJson(o);
     }
 
 }

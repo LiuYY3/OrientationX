@@ -9,7 +9,10 @@
 
     <RelativeLayout
         android:id="@+id/id_search_layout"
-        android:layout_margin="@dimen/dimen_search_bar_margin"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_edit_height"
         android:background="@android:color/white">

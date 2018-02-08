@@ -9,15 +9,18 @@
 
     <TextView
         android:id="@+id/id_search_result_txt"
+        android:layout_margin="@dimen/dimen_search_bar_margin"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_result_height"
-        android:gravity="start"
+        android:gravity="center"
         tools:text="Test"
         android:textSize="@dimen/dimen_title_txt_size"
-        android:textColor="@android:color/holo_blue_dark"/>
+        android:textColor="@color/colorGray"/>
 
     <View
         android:id="@+id/id_under_line_view"
+        android:layout_marginStart="@dimen/dimen_search_bar_margin"
+        android:layout_marginEnd="@dimen/dimen_search_bar_margin"
         android:layout_width="match_parent"
         android:layout_below="@id/id_search_result_txt"
         android:layout_height="1dp"

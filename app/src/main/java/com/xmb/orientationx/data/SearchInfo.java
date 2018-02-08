@@ -1,8 +1,6 @@
-package com.xmb.orientationx.model;
+package com.xmb.orientationx.data;
 
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.PoiInfo;
-import com.baidu.mapapi.search.sug.SuggestionResult.SuggestionInfo;
 
 import java.io.Serializable;
 

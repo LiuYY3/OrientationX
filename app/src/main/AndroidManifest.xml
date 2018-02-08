@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,7 +15,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.READ_MMS" />
@@ -49,12 +47,16 @@
             android:name="com.xmb.orientationx.activity.XBaseActivity"/>
 
         <activity
-            android:name=".activity.XMainActivity"
+            android:name=".activity.XMapActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
-        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
-        </service>
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>
+
+        <service
+            android:name=".service.XLocationService"
+            android:enabled="true"
+            android:exported="true"/>
 
     </application>
 

@@ -1,10 +1,12 @@
 package com.xmb.orientationx.application;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
+import com.xmb.orientationx.broadcast.XLocationClient;
 
 /**
  * XApplication.
@@ -26,6 +28,9 @@ public class XApplication extends Application {
         super.onCreate();
         SDKInitializer.initialize(this);
         SDKInitializer.setCoordType(CoordType.GCJ02);
+        Logger.addLogAdapter(new AndroidLogAdapter());
+        XLocationClient.getInstance().init(this);
+        XLocationClient.getInstance().startTracking();
     }
 
 }

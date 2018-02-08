@@ -5,41 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/id_baidu_map"
-        android:layout_height="match_parent"
+    <FrameLayout
+        android:id="@+id/id_main_container"
         android:layout_width="match_parent"
-        android:clickable="true"
-        android:focusable="true"/>
+        android:layout_height="match_parent"/>
 
     <include
-        android:id="@+id/id_head_layout"
-        layout="@layout/ui_share_title"/>
-
-    <ImageView
-        android:id="@+id/id_guide_img"
-        android:contentDescription="@string/app_content_description"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimen_route_icon_bot"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/navigate"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/dimen_search_bar_margin"/>
-
-    <ImageView
-        android:id="@+id/id_gps_img"
-        android:layout_width="wrap_content"
-        android:contentDescription="@string/app_content_description"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_guide_top"
-        android:src="@drawable/gps"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/dimen_search_bar_margin"/>
-
-    <com.xmb.orientationx.component.XSearchBar
-        android:id="@+id/id_search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        layout="@layout/ui_new_search_tool"/>
 
 </RelativeLayout>

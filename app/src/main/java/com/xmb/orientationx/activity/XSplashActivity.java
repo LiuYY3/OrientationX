@@ -3,12 +3,11 @@ package com.xmb.orientationx.activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.githang.statusbar.StatusBarCompat;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.exception.XBaseException;
+import com.xmb.orientationx.utils.StatusBarUtil;
 import com.xmb.orientationx.utils.XPermissionUtils;
 
 import java.util.concurrent.Executors;
@@ -36,12 +35,13 @@ public class XSplashActivity extends XBaseActivity implements Runnable {
         super.onCreateBase(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
         initViews();
     }
 
     @Override
     public void run() {
-        Intent intent = new Intent(XSplashActivity.this, XMainActivity.class);
+        Intent intent = new Intent(XSplashActivity.this, XMapActivity.class);
         XSplashActivity.this.startActivity(intent);
         XSplashActivity.this.finish();
     }

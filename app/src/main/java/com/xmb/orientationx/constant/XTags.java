@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class XTags implements Serializable {
 
-    public static final String TAG_MAIN = "XMainActivity";
+    public static final String TAG_MAIN = "XMapActivity";
     public static final String TAG_BAR = "XSearchBar";
     public static final String TAG_ADAPTER ="XSearchAdapter";
 
