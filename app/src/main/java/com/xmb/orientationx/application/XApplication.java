@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.orhanobut.hawk.Hawk;
+import com.orhanobut.hawk.NoEncryption;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.xmb.orientationx.broadcast.XLocationClient;
@@ -31,6 +33,9 @@ public class XApplication extends Application {
         Logger.addLogAdapter(new AndroidLogAdapter());
         XLocationClient.getInstance().init(this);
         XLocationClient.getInstance().startTracking();
+        Hawk.init(this)
+                .setEncryption(new NoEncryption())
+                .build();
     }
 
 }

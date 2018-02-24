@@ -1,4 +1,4 @@
-package com.xmb.orientationx.activity;
+package com.xmb.orientationx.demo;
 
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -55,13 +55,14 @@ import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.xmb.orientationx.R;
+import com.xmb.orientationx.activity.XBaseActivity;
 import com.xmb.orientationx.adaptor.XSearchAdaptor;
 import com.xmb.orientationx.adaptor.XSearchAdaptor.ItemSelectedListener;
 import com.xmb.orientationx.component.XSearchBar;
 import com.xmb.orientationx.constant.XConstants;
 import com.xmb.orientationx.constant.XTags;
 import com.xmb.orientationx.exception.XBaseException;
-import com.xmb.orientationx.data.SearchInfo;
+import com.xmb.orientationx.data.XSearchInfo;
 import com.xmb.orientationx.utils.StatusBarUtil;
 import com.xmb.orientationx.utils.XSearchUtils;
 import com.xmb.orientationx.utils.XUtils;
@@ -112,7 +113,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<SuggestionInfo> mSearchSuggestions, mSearchSubSuggestions, mFinalSuggestions;
     private ArrayList<PoiInfo> mSearchPoiResults;
-    private ArrayList<SearchInfo> mSearchResults;
+    private ArrayList<XSearchInfo> mSearchResults;
     private MyLocationConfiguration mLocationConfig;
     private String mDestination;
 
@@ -327,7 +328,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
     public void onItemSelected(int position) {
         mMap.clear();
         mInputText.removeTextChangedListener(this);
-        mAdapter.updateResults(new ArrayList<SearchInfo>());
+        mAdapter.updateResults(new ArrayList<XSearchInfo>());
         mInputText.setText(mSearchResults.get(position).getName());
         mDestination = mSearchResults.get(position).getName();
         mDestinationLL = mSearchResults.get(position).getPt();
@@ -443,14 +444,15 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     private void updateSearchResults() {
         ArrayList<String> sugKeys = new ArrayList<String>();
-        mSearchResults = new ArrayList<SearchInfo>();
+        mSearchResults = new ArrayList<XSearchInfo>();
 
         if (XUtils.checkEmptyList(mFinalSuggestions)) {
             for (SuggestionInfo suggestionInfo : mFinalSuggestions) {
-                SearchInfo searchInfo = new SearchInfo();
+                XSearchInfo searchInfo = new XSearchInfo();
                 if (suggestionInfo.pt != null) {
                     searchInfo.setPt(suggestionInfo.pt);
                     searchInfo.setName(suggestionInfo.key);
+
                     sugKeys.add(suggestionInfo.key);
                     mSearchResults.add(searchInfo);
                 }
@@ -459,7 +461,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
         if (XUtils.checkEmptyList(mSearchPoiResults)) {
             for (PoiInfo poiInfo : mSearchPoiResults) {
-                SearchInfo searchInfo = new SearchInfo();
+                XSearchInfo searchInfo = new XSearchInfo();
                 if (poiInfo.location != null && !sugKeys.contains(poiInfo.name)) {
                     searchInfo.setPt(poiInfo.location);
                     searchInfo.setName(poiInfo.name);

@@ -4,11 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
-import com.orhanobut.logger.Logger;
 import com.xmb.orientationx.constant.XConstants;
+import com.xmb.orientationx.interfaces.XCityListener;
 import com.xmb.orientationx.interfaces.XLocationListener;
 import com.xmb.orientationx.service.XLocationService;
 
@@ -19,6 +20,8 @@ import com.xmb.orientationx.service.XLocationService;
 public class XLocationClient extends BroadcastReceiver {
 
     private XLocationListener mLocationListener;
+
+    private XCityListener mCityListener;
 
     private Context mContext;
 
@@ -40,6 +43,10 @@ public class XLocationClient extends BroadcastReceiver {
         mLocationListener = locationListener;
     }
 
+    public void setCityListener(XCityListener cityListener) {
+        mCityListener = cityListener;
+    }
+
     public void startTracking() {
         Intent intent = new Intent(mContext, XLocationService.class);
         mContext.startService(intent);
@@ -53,18 +60,26 @@ public class XLocationClient extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (mLocationListener != null && intent.getAction().equals(XConstants.SERVICE_CALLBACK)) {
+        if (intent.getAction().equals(XConstants.SERVICE_CALLBACK)) {
             BDLocation location = (BDLocation) intent.getParcelableExtra(XConstants.LOCATION);
-            if (mLastLocationInfo != null) {
-                LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-                LatLng last = new LatLng(mLastLocationInfo.getLatitude(), mLastLocationInfo.getLongitude());
-                if (!isLatEqual(current, last)) {
+            if (mLocationListener != null) {
+                if (mLastLocationInfo != null) {
+                    LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+                    LatLng last = new LatLng(mLastLocationInfo.getLatitude(), mLastLocationInfo.getLongitude());
+                    if (!isLatEqual(current, last)) {
+                        mLastLocationInfo = location;
+                        mLocationListener.onLocationChange(location);
+                    }
+                } else {
                     mLastLocationInfo = location;
                     mLocationListener.onLocationChange(location);
                 }
-            } else {
-                mLastLocationInfo = location;
-                mLocationListener.onLocationChange(location);
+            }
+
+            if (mCityListener != null) {
+                if (!TextUtils.isEmpty(location.getCity())) {
+                    mCityListener.onCityChanged(location.getCity());
+                }
             }
         }
     }

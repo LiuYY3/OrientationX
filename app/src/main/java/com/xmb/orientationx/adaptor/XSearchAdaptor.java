@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xmb.orientationx.R;
-import com.xmb.orientationx.data.SearchInfo;
+import com.xmb.orientationx.data.XSearchInfo;
 import com.xmb.orientationx.viewholder.XSearchViewHolder;
 
 import java.util.ArrayList;
@@ -18,14 +18,14 @@ import java.util.ArrayList;
  */
 public class XSearchAdaptor extends RecyclerView.Adapter<XSearchViewHolder>{
 
-    private ArrayList<SearchInfo> mSearchResults;
+    private ArrayList<XSearchInfo> mSearchResults;
     private ItemSelectedListener mItemSelectedListener;
 
-    public XSearchAdaptor (ArrayList<SearchInfo> searchInfos) {
+    public XSearchAdaptor (ArrayList<XSearchInfo> searchInfos) {
         mSearchResults = searchInfos;
     }
 
-    public void updateResults(ArrayList<SearchInfo> searchInfos) {
+    public void updateResults(ArrayList<XSearchInfo> searchInfos) {
         mSearchResults = searchInfos;
         notifyDataSetChanged();
     }
@@ -37,7 +37,9 @@ public class XSearchAdaptor extends RecyclerView.Adapter<XSearchViewHolder>{
 
     @Override
     public void onBindViewHolder(final XSearchViewHolder holder, final int position) {
-        if (position == getItemCount() - 1) {
+        if (position != getItemCount() - 1) {
+            holder.mUnderLineView.setVisibility(View.VISIBLE);
+        } else {
             holder.mUnderLineView.setVisibility(View.GONE);
         }
 

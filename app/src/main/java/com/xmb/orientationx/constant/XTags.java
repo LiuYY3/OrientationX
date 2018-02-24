@@ -12,5 +12,7 @@ public class XTags implements Serializable {
     public static final String TAG_MAIN = "XMapActivity";
     public static final String TAG_BAR = "XSearchBar";
     public static final String TAG_ADAPTER ="XSearchAdapter";
+    public static final String MAP = "XMap";
+    public static final String SEARCH = "XSearch";
 
 }

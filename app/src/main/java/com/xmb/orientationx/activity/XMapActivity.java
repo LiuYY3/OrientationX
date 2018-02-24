@@ -1,20 +1,30 @@
 package com.xmb.orientationx.activity;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.xmb.orientationx.R;
+import com.xmb.orientationx.constant.XTags;
 import com.xmb.orientationx.exception.XBaseException;
 import com.xmb.orientationx.fragment.XMapFragment;
 import com.xmb.orientationx.fragment.XSearchFragment;
+import com.xmb.orientationx.interfaces.XCloseStatusListener;
+import com.xmb.orientationx.message.XKeyMessageEvent;
+import com.xmb.orientationx.message.XSearchMessageEvent;
 import com.xmb.orientationx.utils.StatusBarUtil;
 
-import butterknife.BindInt;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
@@ -24,7 +34,7 @@ import io.reactivex.functions.Function;
  * Created by lym on 2018/02/08.
  */
 
-public class XMapActivity extends XBaseActivity {
+public class XMapActivity extends XBaseActivity implements XCloseStatusListener {
 
     @BindView(R.id.id_main_search_card)
     CardView mSearchToolCard;
@@ -32,14 +42,21 @@ public class XMapActivity extends XBaseActivity {
     RelativeLayout mInputLayout;
     @BindView(R.id.id_main_search_input)
     EditText mKeyInputEditText;
+    @BindView(R.id.id_main_search_show)
+    TextView mKeyShowTextView;
 
     private int mContainer = R.id.id_main_container;
+
+    private FragmentManager mFragmentManager;
     private XMapFragment mMapFragment;
     private XSearchFragment mSearchFragment;
+
+    private static final long CLICK_GAP = 500;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
         super.onCreateBase(savedInstanceState);
+        XSearchMessageEvent.getInstance().setStatusListener(this);
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
         StatusBarUtil.setTranslucentForCoordinatorLayout(this, 100);
@@ -48,21 +65,42 @@ public class XMapActivity extends XBaseActivity {
         initRXBinding();
     }
 
+    @Override
+    public void onDestroyBase() throws XBaseException {
+        super.onDestroyBase();
+    }
+
+    @Override
+    public void onCloseStatusChanged(boolean close) {
+        if (close) {
+            updateSearchBar();
+        }
+    }
+
+    private void updateSearchBar() {
+        mFragmentManager.beginTransaction().remove(mSearchFragment).commit();
+        mInputLayout.setVisibility(View.GONE);
+        mKeyShowTextView.setText(XSearchMessageEvent.getInstance().getInput());
+        mKeyShowTextView.setVisibility(View.VISIBLE);
+    }
+
     private void initView() {
         mInputLayout.setVisibility(View.GONE);
+        mFragmentManager = getSupportFragmentManager();
     }
 
     private void initMap() {
         mMapFragment = new XMapFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(mContainer, mMapFragment, "Map")
+        mFragmentManager.beginTransaction()
+                .add(mContainer, mMapFragment, XTags.MAP)
                 .commit();
     }
 
     private void doSearch() {
+        XSearchMessageEvent.getInstance().setSearch(false);
         mSearchFragment = new XSearchFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(mContainer, mSearchFragment, "Search")
+        mFragmentManager.beginTransaction()
+                .add(mContainer, mSearchFragment, XTags.SEARCH)
                 .commit();
     }
 
@@ -80,10 +118,24 @@ public class XMapActivity extends XBaseActivity {
             public void accept(Boolean b) throws Exception {
                 if (b) {
                     mInputLayout.setVisibility(View.VISIBLE);
+                    mKeyShowTextView.setVisibility(View.GONE);
                     doSearch();
+                    mKeyInputEditText.setText(XSearchMessageEvent.getInstance().getInput());
                 }
             }
         });
+
+        RxTextView.textChanges(mKeyInputEditText)
+                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<CharSequence>() {
+                    @Override
+                    public void accept(CharSequence charSequence) throws Exception {
+                        Log.i(XTags.MAP, "accept: " + charSequence);
+                        XSearchMessageEvent.getInstance().setInput(charSequence);
+                        XKeyMessageEvent.getInstance().setKey(charSequence);
+                        EventBus.getDefault().post(XKeyMessageEvent.getInstance());
+                    }
+                });
     }
 
 }

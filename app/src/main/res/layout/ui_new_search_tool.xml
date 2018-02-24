@@ -13,23 +13,41 @@
     android:layout_height="50dp">
 
     <RelativeLayout
-        android:id="@+id/id_main_search_layout"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_height="match_parent">
 
-        <EditText
+        <RelativeLayout
+            android:id="@+id/id_main_search_layout"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
+
+            <EditText
+                android:layout_centerInParent="true"
+                android:id="@+id/id_main_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_edit_height"
+                android:imeOptions="actionDone"
+                android:hint="@string/app_input_hint"
+                android:inputType="text"
+                android:textSize="@dimen/dimen_title_txt_size"
+                android:background="@android:color/white"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:visibility="gone"
             android:layout_centerInParent="true"
-            android:id="@+id/id_main_search_input"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:gravity="center_vertical"
+            android:id="@+id/id_main_search_show"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_edit_height"
-            android:imeOptions="actionDone"
-            android:hint="@string/app_input_hint"
-            android:inputType="text"
-            android:textSize="@dimen/dimen_title_txt_size"
-            android:background="@android:color/white"/>
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/dimen_title_txt_size"/>
 
     </RelativeLayout>
 

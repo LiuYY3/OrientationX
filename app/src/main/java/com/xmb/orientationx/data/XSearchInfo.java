@@ -9,10 +9,11 @@ import java.io.Serializable;
  * implements {@link Serializable}
  * @author 徐梦笔
  */
-public class SearchInfo implements Serializable {
+public class XSearchInfo implements Serializable {
 
     private LatLng pt;
     private String name;
+    private String address;
 
     public LatLng getPt() {
         return pt;
@@ -28,5 +29,13 @@ public class SearchInfo implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
