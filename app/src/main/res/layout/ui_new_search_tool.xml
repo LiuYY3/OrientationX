@@ -8,9 +8,9 @@
     card_view:cardCornerRadius="@dimen/dime_radius_5"
     android:layout_marginStart="@dimen/dimen_search_bar_margin"
     android:layout_marginEnd="@dimen/dimen_search_bar_margin"
-    android:layout_marginTop="32dp"
+    android:layout_marginTop="@dimen/dimen_margin_32"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="@dimen/dimen_height_50">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,8 +18,8 @@
 
         <RelativeLayout
             android:id="@+id/id_main_search_layout"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="@dimen/dimen_status_bar_top_margin"
+            android:layout_marginEnd="@dimen/dimen_status_bar_top_margin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white">
@@ -40,8 +40,8 @@
         <TextView
             android:visibility="gone"
             android:layout_centerInParent="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="@dimen/dimen_status_bar_top_margin"
+            android:layout_marginEnd="@dimen/dimen_status_bar_top_margin"
             android:gravity="center_vertical"
             android:id="@+id/id_main_search_show"
             android:layout_width="match_parent"

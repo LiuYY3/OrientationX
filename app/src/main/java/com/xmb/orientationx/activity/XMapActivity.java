@@ -5,10 +5,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.xmb.orientationx.R;
@@ -17,6 +19,7 @@ import com.xmb.orientationx.exception.XBaseException;
 import com.xmb.orientationx.fragment.XMapFragment;
 import com.xmb.orientationx.fragment.XSearchFragment;
 import com.xmb.orientationx.interfaces.XCloseStatusListener;
+import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.message.XKeyMessageEvent;
 import com.xmb.orientationx.message.XSearchMessageEvent;
 import com.xmb.orientationx.utils.StatusBarUtil;
@@ -44,6 +47,8 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
     EditText mKeyInputEditText;
     @BindView(R.id.id_main_search_show)
     TextView mKeyShowTextView;
+    @BindView(R.id.id_guide_start_btn)
+    Button mStartGuideButton;
 
     private int mContainer = R.id.id_main_container;
 
@@ -105,6 +110,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
     }
 
     private void initRXBinding() {
+
         RxView.clicks(mSearchToolCard).map(new Function<Object, Boolean>() {
             @Override
             public Boolean apply(Object o) throws Exception {
@@ -125,6 +131,13 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
             }
         });
 
+        RxView.clicks(mStartGuideButton).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                XClickMessageEvent.getInstance().setClick();
+            }
+        });
+
         RxTextView.textChanges(mKeyInputEditText)
                 .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<CharSequence>() {
@@ -136,6 +149,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
                         EventBus.getDefault().post(XKeyMessageEvent.getInstance());
                     }
                 });
+
     }
 
 }

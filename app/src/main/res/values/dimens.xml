@@ -7,6 +7,7 @@
     <dimen name="dimen_result_height">25dp</dimen>
     <dimen name="dimen_status_bar_top_margin">24dp</dimen>
     <dimen name="dimen_route_icon_bot">30dp</dimen>
+    <dimen name="dimen_btn_width">60dp</dimen>
     <dimen name="dimen_edit_height">40dp</dimen>
     <dimen name="dimen_guide_top">80dp</dimen>
 
@@ -19,6 +20,10 @@
 
     <!--num picker-->
     <dimen name="dimen_margin_30">30dp</dimen>
+    <dimen name="dimen_margin_32">32dp</dimen>
+    <dimen name="dimen_margin_40">40dp</dimen>
+
+    <dimen name="dimen_height_50">50dp</dimen>
 
     <dimen name="dimen_blur_2">2dp</dimen>
 

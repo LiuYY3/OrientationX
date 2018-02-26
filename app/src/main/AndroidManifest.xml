@@ -50,6 +50,9 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
+        <activity android:name=".activity.XGuideActivity"
+            android:launchMode="singleTop"/>
+
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>
 
         <service

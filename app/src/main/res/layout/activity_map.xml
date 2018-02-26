@@ -13,4 +13,17 @@
     <include
         layout="@layout/ui_new_search_tool"/>
 
+    <Button
+        android:id="@+id/id_guide_start_btn"
+        android:background="@drawable/btn_background"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dimen_margin_40"
+        android:layout_marginEnd="@dimen/dimen_search_bar_margin"
+        android:layout_width="@dimen/dimen_btn_width"
+        android:layout_height="@dimen/dimen_btn_width"
+        android:textAllCaps="false"
+        android:textSize="@dimen/dimen_input_txt_size"
+        android:text="@string/app_guide_start"/>
+
 </RelativeLayout>

@@ -1,9 +1,13 @@
 package com.xmb.orientationx.fragment;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +24,6 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Overlay;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.BikingRouteResult;
@@ -29,22 +31,31 @@ import com.baidu.mapapi.search.route.DrivingRouteLine;
 import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.IndoorRouteResult;
+import com.baidu.mapapi.search.route.MassTransitRouteLine;
 import com.baidu.mapapi.search.route.MassTransitRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.baidu.navisdk.adapter.BNRoutePlanNode;
+import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.xmb.orientationx.R;
+import com.xmb.orientationx.activity.XGuideActivity;
+import com.xmb.orientationx.activity.XMapActivity;
 import com.xmb.orientationx.broadcast.XLocationClient;
 import com.xmb.orientationx.constant.XTags;
 import com.xmb.orientationx.data.XSearchInfo;
+import com.xmb.orientationx.interfaces.XClickListener;
 import com.xmb.orientationx.interfaces.XLocationListener;
 import com.xmb.orientationx.interfaces.XSelectListener;
+import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.message.XSearchMessageEvent;
 import com.xmb.orientationx.utils.XUtils;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,12 +67,14 @@ import butterknife.Unbinder;
 
 public class XMapFragment extends Fragment implements XLocationListener,
         XSelectListener,
+        XClickListener,
         OnGetRoutePlanResultListener {
 
     @BindView(R.id.id_main_map)
     MapView mMapView;
 
     private String mLocateCity = "盐城";
+    private static final String APP_FOLDER_NAME = "XMapFragment";
 
     private Unbinder mBinder;
     private BaiduMap mMap;
@@ -74,8 +87,17 @@ public class XMapFragment extends Fragment implements XLocationListener,
     private PolylineOptions mPolyline;
     private Overlay mRoute;
     private ArrayList<Overlay> mRoutes = new ArrayList<>();
+    private PlanNode mStNode, mEnNode;
+    private String mSDCardPath;
 
     private boolean isFirst = true;
+
+    @Override
+    public void onClick() {
+        if (BaiduNaviManager.isNaviInited()) {
+            doStartNavigator();
+        }
+    }
 
     @Override
     public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
@@ -99,7 +121,19 @@ public class XMapFragment extends Fragment implements XLocationListener,
 
     @Override
     public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
-
+        if (XUtils.checkEmptyList(massTransitRouteResult.getRouteLines())) {
+            MassTransitRouteLine mass = massTransitRouteResult.getRouteLines().get(0);
+            if (XUtils.checkEmptyList(mass.getAllStep())) {
+                for (MassTransitRouteLine.TransitStep step : mass.getAllStep()) {
+                    if (XUtils.checkEmptyList(step.getWayPoints())) {
+                        mPolyline = new PolylineOptions().width(8)
+                                .color(getResources().getColor(R.color.colorBlack)).points(step.getWayPoints());
+                        mRoute = mMap.addOverlay(mPolyline);
+                        mRoutes.add(mRoute);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -130,13 +164,13 @@ public class XMapFragment extends Fragment implements XLocationListener,
 
         mRoutePlanSearch = RoutePlanSearch.newInstance();
         mRoutePlanSearch.setOnGetRoutePlanResultListener(XMapFragment.this);
-        Log.i(XTags.MAP, "doRouteSearch: " + mMyLocation.getAddrStr() + " : " + mDestinationAddress);
-        PlanNode stNode = PlanNode.withCityNameAndPlaceName(mLocateCity, mMyLocation.getAddrStr());
-        PlanNode enNode = PlanNode.withCityNameAndPlaceName(mLocateCity, mDestinationAddress);
+        mStNode = PlanNode.withLocation(mMyPosition);
+        mEnNode = PlanNode.withLocation(mDestination);
 
         mRoutePlanSearch.drivingSearch((new DrivingRoutePlanOption())
-                .from(stNode)
-                .to(enNode));
+                .from(mStNode)
+                .to(mEnNode)
+        );
     }
 
     @Override
@@ -186,6 +220,10 @@ public class XMapFragment extends Fragment implements XLocationListener,
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mBinder = ButterKnife.bind(this, view);
         XSearchMessageEvent.getInstance().setSelectListener(this);
+        XClickMessageEvent.getInstance().setClickListener(this);
+        if (initDirs()) {
+            initNavigator();
+        }
         return view;
     }
 
@@ -233,6 +271,97 @@ public class XMapFragment extends Fragment implements XLocationListener,
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         mMapView.showZoomControls(false);
+    }
+
+    private String getSdcardDir() {
+        if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
+            return Environment.getExternalStorageDirectory().toString();
+        }
+        return null;
+    }
+
+    private boolean initDirs() {
+        mSDCardPath = getSdcardDir();
+        if (mSDCardPath == null) {
+            return false;
+        }
+        File f = new File(mSDCardPath, APP_FOLDER_NAME);
+        if (!f.exists()) {
+            try {
+                f.mkdir();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void initNavigator() {
+        BaiduNaviManager.getInstance().init(this.getActivity(), mSDCardPath, APP_FOLDER_NAME, new BaiduNaviManager.NaviInitListener() {
+            @Override
+            public void onAuthResult(int i, String s) {
+                Log.i(XTags.MAP, "onAuthResult " + i + " : " + s);
+            }
+
+            @Override
+            public void initStart() {
+
+            }
+
+            @Override
+            public void initSuccess() {
+                Log.i(XTags.MAP, "initSuccess");
+            }
+
+            @Override
+            public void initFailed() {
+                Log.i(XTags.MAP, "initFailed");
+            }
+        }, null, null, null);
+    }
+
+    private void doStartNavigator() {
+        BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.latitude,
+                mMyPosition.longitude,
+                mMyLocation.getAddrStr(),
+                null,
+                BNRoutePlanNode.CoordinateType.GCJ02);
+
+        BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.latitude,
+                mDestination.longitude,
+                mDestinationAddress,
+                null,
+                BNRoutePlanNode.CoordinateType.GCJ02);
+
+        List<BNRoutePlanNode> list = new ArrayList<>();
+        list.add(stNode);
+        list.add(endNode);
+        BaiduNaviManager.getInstance().launchNavigator(this.getActivity(), list, 1, true, new XRoutePlanListener(stNode));
+    }
+
+    public class XRoutePlanListener implements BaiduNaviManager.RoutePlanListener {
+
+        private BNRoutePlanNode mBNRoutePlanNode = null;
+
+        public XRoutePlanListener(BNRoutePlanNode node){
+            mBNRoutePlanNode = node;
+        }
+
+        @Override
+        public void onJumpToNavigator() {
+            Log.i(XTags.MAP, "onJumpToNavigator");
+            Intent intent = new Intent(XMapFragment.this.getContext(), XGuideActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("plan", (BNRoutePlanNode) mBNRoutePlanNode);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onRoutePlanFailed() {
+            Log.i(XTags.MAP, "onRoutePlanFailed");
+        }
     }
 
 }
