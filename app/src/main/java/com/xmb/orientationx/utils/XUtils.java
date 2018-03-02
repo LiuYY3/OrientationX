@@ -3,6 +3,8 @@ package com.xmb.orientationx.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -48,6 +50,11 @@ public class XUtils {
     public static String objToString(Object o) {
         Gson gson = new Gson();
         return gson.toJson(o);
+    }
+
+    public static LatLng bd2gc(LatLng coordinate) {
+        CoordinateConverter converter = new CoordinateConverter();
+        return converter.from(CoordinateConverter.CoordType.BD09LL).coord(coordinate).convert();
     }
 
 }

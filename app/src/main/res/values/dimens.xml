@@ -28,4 +28,9 @@
     <dimen name="dimen_blur_2">2dp</dimen>
 
     <dimen name="dime_radius_5">5dp</dimen>
+
+    <!--demo-->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
 </resources>
