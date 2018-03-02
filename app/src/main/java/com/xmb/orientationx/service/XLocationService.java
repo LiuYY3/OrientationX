@@ -50,7 +50,7 @@ public class XLocationService extends Service {
     private void setLocationClient() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        option.setCoorType("bd0911");
+        option.setCoorType("gcj02");
         option.setScanSpan(1000);
         option.disableCache(true);
         option.setOpenGps(true);

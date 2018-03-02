@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -26,6 +28,11 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.route.BikingRouteResult;
 import com.baidu.mapapi.search.route.DrivingRouteLine;
 import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
@@ -38,6 +45,7 @@ import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.xmb.orientationx.R;
@@ -89,8 +97,21 @@ public class XMapFragment extends Fragment implements XLocationListener,
     private ArrayList<Overlay> mRoutes = new ArrayList<>();
     private PlanNode mStNode, mEnNode;
     private String mSDCardPath;
+    private GeoCoder mGeoCoder;
 
     private boolean isFirst = true;
+
+    private OnGetGeoCoderResultListener mGeoListener = new OnGetGeoCoderResultListener() {
+        @Override
+        public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+        }
+
+        @Override
+        public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+
+        }
+    };
 
     @Override
     public void onClick() {
@@ -322,14 +343,14 @@ public class XMapFragment extends Fragment implements XLocationListener,
     }
 
     private void doStartNavigator() {
-        BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.latitude,
-                mMyPosition.longitude,
+        BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
+                mMyPosition.latitude,
                 mMyLocation.getAddrStr(),
                 null,
                 BNRoutePlanNode.CoordinateType.GCJ02);
 
-        BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.latitude,
-                mDestination.longitude,
+        BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.longitude,
+                mDestination.latitude,
                 mDestinationAddress,
                 null,
                 BNRoutePlanNode.CoordinateType.GCJ02);
@@ -360,7 +381,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
 
         @Override
         public void onRoutePlanFailed() {
-            Log.i(XTags.MAP, "onRoutePlanFailed");
+            Toast.makeText(XMapFragment.this.getContext(), "Cannot Open Route Guide !", Toast.LENGTH_SHORT).show();
         }
     }
 
