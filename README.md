@@ -5,3 +5,7 @@ This is an Android app based on BaiduMap SDK. The purpose is to understand how t
 * Accurate Self Location.
 * Functional Search Bar.
 * Can Draw Line Between Self Location And Destination.
+
+### Alpha 1.1:
+* Add Route Guide System.
+* Add Reverse Geo Code System.
