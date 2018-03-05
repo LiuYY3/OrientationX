@@ -9,3 +9,7 @@ This is an Android app based on BaiduMap SDK. The purpose is to understand how t
 ### Alpha 1.1:
 * Add Route Guide System.
 * Add Reverse Geo Code System.
+
+### Alpha 1.2:
+* Add Favorite Function.
+* Add History List Function.
