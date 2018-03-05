@@ -84,6 +84,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
 
     private void updateSearchBar() {
         mFragmentManager.beginTransaction().remove(mSearchFragment).commit();
+        mStartGuideButton.setVisibility(View.VISIBLE);
         mInputLayout.setVisibility(View.GONE);
         mKeyShowTextView.setText(XSearchMessageEvent.getInstance().getInput());
         mKeyShowTextView.setVisibility(View.VISIBLE);
@@ -107,6 +108,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
         mFragmentManager.beginTransaction()
                 .add(mContainer, mSearchFragment, XTags.SEARCH)
                 .commit();
+        mStartGuideButton.setVisibility(View.GONE);
     }
 
     private void initRXBinding() {

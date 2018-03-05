@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/id_search_result_body"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/id_search_result_body_card"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardElevation="@dimen/dimen_blur_2"
     android:layout_margin="@dimen/dimen_search_bar_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/id_search_result_txt"
+    <RelativeLayout
+        android:id="@+id/id_search_result_body"
         android:layout_margin="@dimen/dimen_search_bar_margin"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_result_height"
-        android:gravity="center"
-        tools:text="Test"
-        android:textSize="@dimen/dimen_title_txt_size"
-        android:textColor="@color/colorGray"/>
+        android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/id_under_line_view"
-        android:layout_marginStart="@dimen/dimen_search_bar_margin"
-        android:layout_marginEnd="@dimen/dimen_search_bar_margin"
-        android:layout_width="match_parent"
-        android:layout_below="@id/id_search_result_txt"
-        android:layout_height="1dp"
-        android:background="@color/colorGray"/>
+        <TextView
+            android:id="@+id/id_search_result_txt"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Test"
+            android:textSize="@dimen/dimen_title_txt_size"
+            android:textColor="@color/colorBlack"/>
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/id_search_save_img"
+            android:src="@mipmap/ic_notsaved"
+            android:layout_width="@dimen/dimen_result_height"
+            android:layout_height="@dimen/dimen_result_height"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
