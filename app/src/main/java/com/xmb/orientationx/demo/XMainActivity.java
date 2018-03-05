@@ -1,5 +1,6 @@
 package com.xmb.orientationx.demo;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -348,7 +349,7 @@ public class XMainActivity extends XBaseActivity implements BDLocationListener,
 
     private void initRecyclerData() {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new XSearchAdaptor(mSearchResults);
+        mAdapter = new XSearchAdaptor(this, mSearchResults);
         mAdapter.setListener(this);
     }
 

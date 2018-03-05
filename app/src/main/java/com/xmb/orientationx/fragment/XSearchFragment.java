@@ -31,6 +31,7 @@ import com.xmb.orientationx.data.XSearchInfo;
 import com.xmb.orientationx.interfaces.XCityListener;
 import com.xmb.orientationx.message.XSearchMessageEvent;
 import com.xmb.orientationx.message.XKeyMessageEvent;
+import com.xmb.orientationx.utils.XAppDataUtils;
 import com.xmb.orientationx.utils.XSearchUtils;
 import com.xmb.orientationx.utils.XUtils;
 
@@ -67,7 +68,7 @@ public class XSearchFragment extends Fragment implements XCityListener,
     private PoiSearch mPoiSearch;
     private ArrayList<SuggestionResult.SuggestionInfo> mSearchSuggestions, mSearchSubSuggestions, mFinalSuggestions;
     private ArrayList<PoiInfo> mSearchPoiResults;
-    private ArrayList<XSearchInfo> mSearchResults;
+    private ArrayList<XSearchInfo> mSearchResults, mDataBaseResults, mFavoriteResults;
 
     @Override
     public void onGetPoiResult(PoiResult poiResult) {
@@ -132,6 +133,8 @@ public class XSearchFragment extends Fragment implements XCityListener,
     }
 
     private void initSearch() {
+        mFavoriteResults = XAppDataUtils.getInstance().getFavorite();
+        mDataBaseResults = XAppDataUtils.getInstance().getSearchHistory();
         mSuggestionSearch = SuggestionSearch.newInstance();
         mSuggestionSearch.setOnGetSuggestionResultListener(this);
         mPoiSearch = PoiSearch.newInstance();
@@ -153,13 +156,16 @@ public class XSearchFragment extends Fragment implements XCityListener,
         XSearchMessageEvent.getInstance().setInfo(mSearchResults.get(position));
         XSearchMessageEvent.getInstance().setInput(mSearchResults.get(position).getName());
         XSearchMessageEvent.getInstance().setSearch(true);
+        XSearchInfo searchInfo = mSearchResults.get(position);
+        searchInfo.setSearchTimes(searchInfo.getSearchTimes() + 1);
+        XAppDataUtils.getInstance().setSearchHistory(searchInfo);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mLayoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
-        mAdapter = new XSearchAdaptor(mSearchResults);
+        mAdapter = new XSearchAdaptor(this.getContext(), mSearchResults);
         mAdapter.setListener(this);
         mHistoryRecyclerView.setLayoutManager(mLayoutManager);
         mHistoryRecyclerView.setAdapter(mAdapter);
@@ -171,8 +177,12 @@ public class XSearchFragment extends Fragment implements XCityListener,
 
         Log.i(XTags.SEARCH, "onMessage: " + key);
 
-        if (TextUtils.isEmpty(key)) {
+        if (TextUtils.isEmpty(key) && !XUtils.checkEmptyList(mDataBaseResults)) {
             mHistoryListCard.setVisibility(View.INVISIBLE);
+        } else if (TextUtils.isEmpty(key) && XUtils.checkEmptyList(mDataBaseResults)) {
+            mHistoryListCard.setVisibility(View.VISIBLE);
+            updateSearchResults();
+            mAdapter.updateResults(mSearchResults);
         } else {
             mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                     .keyword(key)
@@ -188,10 +198,26 @@ public class XSearchFragment extends Fragment implements XCityListener,
         ArrayList<String> sugKeys = new ArrayList<String>();
         mSearchResults = new ArrayList<XSearchInfo>();
 
+        if (XUtils.checkEmptyList(mFavoriteResults)) {
+            for (XSearchInfo info : mFavoriteResults) {
+                sugKeys.add(info.getName());
+                mSearchResults.add(info);
+            }
+        }
+
+        if (XUtils.checkEmptyList(mDataBaseResults)) {
+            for (XSearchInfo info : mDataBaseResults) {
+                if (!sugKeys.contains(info.getName())) {
+                    sugKeys.add(info.getName());
+                    mSearchResults.add(info);
+                }
+            }
+        }
+
         if (XUtils.checkEmptyList(mFinalSuggestions)) {
             for (SuggestionResult.SuggestionInfo suggestionInfo : mFinalSuggestions) {
                 XSearchInfo searchInfo = new XSearchInfo();
-                if (suggestionInfo.pt != null) {
+                if (suggestionInfo.pt != null && !sugKeys.contains(suggestionInfo.key)) {
                     searchInfo.setPt(suggestionInfo.pt);
                     searchInfo.setName(suggestionInfo.key);
                     searchInfo.setAddress(suggestionInfo.address);
