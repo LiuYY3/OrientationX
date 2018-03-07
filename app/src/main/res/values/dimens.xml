@@ -8,8 +8,10 @@
     <dimen name="dimen_status_bar_top_margin">24dp</dimen>
     <dimen name="dimen_route_icon_bot">30dp</dimen>
     <dimen name="dimen_btn_width">60dp</dimen>
+    <dimen name="dimen_btn_half_width">30dp</dimen>
     <dimen name="dimen_edit_height">40dp</dimen>
     <dimen name="dimen_guide_top">80dp</dimen>
+    <dimen name="dimen_oval_radius">500dp</dimen>
 
     <!--text size-->
     <dimen name="dimen_input_txt_size">24sp</dimen>
@@ -19,11 +21,17 @@
     <dimen name="dimen_splash_author">20sp</dimen>
 
     <!--num picker-->
+    <dimen name="dimen_margin_15">15dp</dimen>
+    <dimen name="dimen_margin_20">20dp</dimen>
     <dimen name="dimen_margin_30">30dp</dimen>
     <dimen name="dimen_margin_32">32dp</dimen>
     <dimen name="dimen_margin_40">40dp</dimen>
+    <dimen name="dimen_margin_89">89dp</dimen>
 
+    <dimen name="dimen_height_24">24dp</dimen>
+    <dimen name="dimen_height_40">40dp</dimen>
     <dimen name="dimen_height_50">50dp</dimen>
+    <dimen name="dimen_height_74">74dp</dimen>
 
     <dimen name="dimen_blur_2">2dp</dimen>
 

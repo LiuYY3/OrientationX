@@ -45,9 +45,15 @@
         <activity
             android:name="com.xmb.orientationx.activity.XBaseActivity"/>
 
+        <activity android:name=".activity.XAccountActivity"
+            android:launchMode="singleTop"/>
+
+        <activity android:name=".activity.XSettingActivity"
+            android:launchMode="singleTop"/>
+
         <activity
             android:name=".activity.XMapActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <activity android:name=".activity.XGuideActivity"

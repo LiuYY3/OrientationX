@@ -6,6 +6,7 @@
         android:color="@color/colorHoloBlue"/>
 
     <corners
-        android:radius="@dimen/dime_radius_5"/>
+        android:bottomRightRadius="@dimen/dimen_oval_radius"
+        android:topRightRadius="@dimen/dimen_oval_radius"/>
 
 </shape>
