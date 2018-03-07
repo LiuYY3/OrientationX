@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorHoloBlue"
+    android:paddingTop="@dimen/dimen_margin_15"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_height_74">
+
+    <TextView
+        android:id="@+id/id_activity_name"
+        tools:text="Profile"
+        android:textSize="@dimen/dimen_input_txt_size"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

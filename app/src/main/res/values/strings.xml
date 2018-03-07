@@ -2,9 +2,14 @@
 
     <string name="app_name">OrientationX</string>
     <string name="app_content_description">Missing</string>
-    <string name="app_input_hint"></string>
+    <string name="app_input_hint">Here</string>
     <string name="app_author">Great Creator: Xu</string>
 
     <!--map-->
     <string name="app_guide_start">G</string>
+    <string name="app_to_profile">P</string>
+    <string name="app_to_set">S</string>
+    <string name="app_to_map">M</string>
+    <string name="app_profile">Profile</string>
+    <string name="app_setting">setting</string>
 </resources>

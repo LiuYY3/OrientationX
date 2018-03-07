@@ -1,14 +1,17 @@
 package com.xmb.orientationx.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -49,6 +52,8 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
     TextView mKeyShowTextView;
     @BindView(R.id.id_guide_start_btn)
     Button mStartGuideButton;
+    @BindView(R.id.id_to_profile_btn)
+    Button mToProfileButton;
 
     private int mContainer = R.id.id_main_container;
 
@@ -85,6 +90,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
     private void updateSearchBar() {
         mFragmentManager.beginTransaction().remove(mSearchFragment).commit();
         mStartGuideButton.setVisibility(View.VISIBLE);
+        mToProfileButton.setVisibility(View.VISIBLE);
         mInputLayout.setVisibility(View.GONE);
         mKeyShowTextView.setText(XSearchMessageEvent.getInstance().getInput());
         mKeyShowTextView.setVisibility(View.VISIBLE);
@@ -109,6 +115,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
                 .add(mContainer, mSearchFragment, XTags.SEARCH)
                 .commit();
         mStartGuideButton.setVisibility(View.GONE);
+        mToProfileButton.setVisibility(View.GONE);
     }
 
     private void initRXBinding() {
@@ -133,10 +140,28 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
             }
         });
 
-        RxView.clicks(mStartGuideButton).subscribe(new Consumer<Object>() {
+        RxView.clicks(mStartGuideButton).map(new Function<Object, Boolean>() {
+            @Override
+            public Boolean apply(Object o) throws Exception {
+                return TextUtils.isEmpty(mKeyShowTextView.getText());
+            }
+        }).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean b) throws Exception {
+                if (!b) {
+                    XClickMessageEvent.getInstance().setClick();
+                } else {
+                    Toast.makeText(XMapActivity.this, "Please input something !", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        RxView.clicks(mToProfileButton).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception {
-                XClickMessageEvent.getInstance().setClick();
+                Intent intent = new Intent(XMapActivity.this, XAccountActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_in, R.anim.left_out);
             }
         });
 

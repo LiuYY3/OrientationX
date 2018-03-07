@@ -30,7 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_edit_height"
                 android:imeOptions="actionDone"
-                android:hint="@string/app_input_hint"
                 android:inputType="text"
                 android:textSize="@dimen/dimen_title_txt_size"
                 android:background="@android:color/white"/>
