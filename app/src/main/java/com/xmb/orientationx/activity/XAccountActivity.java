@@ -28,6 +28,8 @@ public class XAccountActivity extends XBaseActivity {
     Button mBackToMapButton;
     @BindView(R.id.id_to_setting_btn)
     Button mToSetButton;
+    @BindView(R.id.id_to_profile_favorite_btn)
+    Button mToFavoriteButton;
 
     @BindString(R.string.app_profile)
     String profile;
@@ -43,9 +45,7 @@ public class XAccountActivity extends XBaseActivity {
     }
 
     private void initViews() {
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/LobsterTwo-Bold.ttf");
-        mNameTextView.setTypeface(typeface);
-        mNameTextView.setText(profile);
+        this.showTitle(true, profile);
     }
 
     private void initRxBindings() {
@@ -63,6 +63,14 @@ public class XAccountActivity extends XBaseActivity {
                 Intent intent = new Intent(XAccountActivity.this, XSettingActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+            }
+        });
+
+        RxView.clicks(mToFavoriteButton).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                Intent intent = new Intent(XAccountActivity.this, XFavoriteActivity.class);
+                startActivity(intent);
             }
         });
     }

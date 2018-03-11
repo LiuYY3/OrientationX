@@ -59,6 +59,9 @@
         <activity android:name=".activity.XGuideActivity"
             android:launchMode="singleTop"/>
 
+        <activity android:name=".activity.XFavoriteActivity"
+            android:launchMode="singleTop"/>
+
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>
 
         <service

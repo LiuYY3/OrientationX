@@ -10,4 +10,6 @@ public class XDataConstants {
 
     public static final String FAVORITE = "FAVOR";
 
+    public static final String TRANSITION = "TRAN";
+
 }

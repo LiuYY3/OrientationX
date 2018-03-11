@@ -5,6 +5,10 @@
     <string name="app_input_hint">Here</string>
     <string name="app_author">Great Creator: Xu</string>
 
+    <string name="app_edit">Edit</string>
+    <string name="app_done">Done</string>
+    <string name="app_delete">Delete</string>
+
     <!--map-->
     <string name="app_guide_start">G</string>
     <string name="app_to_profile">P</string>
@@ -12,4 +16,11 @@
     <string name="app_to_map">M</string>
     <string name="app_profile">Profile</string>
     <string name="app_setting">setting</string>
+    <string name="app_favorite">Favorite</string>
+
+    <!--profile-->
+    <string name="app_to_profile_navigation">导</string>
+    <string name="app_to_profile_favorite">收</string>
+    <string name="app_to_profile_location">常</string>
+
 </resources>

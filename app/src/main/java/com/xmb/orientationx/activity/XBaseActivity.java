@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,9 +69,25 @@ public class XBaseActivity extends AppCompatActivity {
         }
     }
 
+    public void showRightTitle(Boolean b, String txt) {
+        TextView textView = (TextView) this.findViewById(R.id.id_activity_right);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/LobsterTwo-Bold.ttf");
+        if (textView != null) {
+            if (!TextUtils.isEmpty(txt)) {
+                textView.setText(txt);
+                textView.setTypeface(typeface);
+            }
+            if (b) {
+                textView.setVisibility(View.VISIBLE);
+            } else {
+                textView.setVisibility(View.GONE);
+            }
+        }
+    }
+
     public void showTitle(Boolean show, String text) {
-        TextView title = (TextView) this.findViewById(R.id.id_middle_txt);
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/CygnetRound.ttf");
+        TextView title = (TextView) this.findViewById(R.id.id_activity_name);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/LobsterTwo-Bold.ttf");
         if (title != null) {
             title.setText(text);
             title.setTypeface(typeface);
@@ -83,7 +100,7 @@ public class XBaseActivity extends AppCompatActivity {
     }
 
     public void showLeftIcon(Boolean show, int res) {
-        ImageView leftIcon = (ImageView) this.findViewById(R.id.id_left_img);
+        ImageView leftIcon = (ImageView) this.findViewById(R.id.id_activity_left_icon);
         if (leftIcon != null) {
             if (res != 0) {
                 leftIcon.setImageResource(res);
@@ -97,7 +114,7 @@ public class XBaseActivity extends AppCompatActivity {
     }
 
     public void showRightIcon(Boolean show, int res) {
-        ImageView rightIcon = (ImageView) this.findViewById(R.id.id_right_img);
+        ImageView rightIcon = (ImageView) this.findViewById(R.id.id_activity_right_icon);
         if (rightIcon != null) {
             if (res != 0) {
                 rightIcon.setImageResource(res);

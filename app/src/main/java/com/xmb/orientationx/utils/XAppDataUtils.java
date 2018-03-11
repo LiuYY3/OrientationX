@@ -20,6 +20,8 @@ public class XAppDataUtils {
 
     private ArrayList<XSearchInfo> favorite;
 
+    private XSearchInfo[] transition;
+
     private static final XAppDataUtils instance = new XAppDataUtils();
 
     public static XAppDataUtils getInstance() {
@@ -73,4 +75,24 @@ public class XAppDataUtils {
         favorite.remove(temp);
         Hawk.put(XDataConstants.FAVORITE, favorite);
     }
+
+    public void updateTransition(int size) {
+        transition = new XSearchInfo[size];
+        Hawk.put(XDataConstants.TRANSITION, transition);
+    }
+
+    public void setTransition(int size, int position, XSearchInfo info) {
+        transition = Hawk.get(XDataConstants.TRANSITION, new XSearchInfo[size]);
+        transition[position] = info;
+        Hawk.put(XDataConstants.TRANSITION, transition);
+    }
+
+    public XSearchInfo getTransition(int size, int position) {
+        transition = new XSearchInfo[size];
+        if (Hawk.get(XDataConstants.TRANSITION, new XSearchInfo[size]).length == size) {
+            transition = Hawk.get(XDataConstants.TRANSITION, new XSearchInfo[size]);
+        }
+        return transition[position];
+    }
+
 }

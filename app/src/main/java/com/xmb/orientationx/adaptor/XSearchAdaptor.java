@@ -25,7 +25,7 @@ import io.reactivex.functions.Function;
  * subclass of {@link RecyclerView.Adapter<XSearchViewHolder>}
  * @author 徐梦笔
  */
-public class XSearchAdaptor extends RecyclerView.Adapter<XSearchViewHolder>{
+public class XSearchAdaptor extends RecyclerView.Adapter<XSearchViewHolder> {
 
     private ArrayList<XSearchInfo> mSearchResults;
     private ItemSelectedListener mItemSelectedListener;
