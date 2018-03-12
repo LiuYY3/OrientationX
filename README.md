@@ -13,3 +13,11 @@ This is an Android app based on BaiduMap SDK. The purpose is to understand how t
 ### Alpha 1.2:
 * Add Favorite Function.
 * Add History List Function.
+
+
+### Alpha 1.3:
+* Add Favorite Page.
+* Add Profile Page.
+* Add Guide Picker Page.
+* Bike Navi Is Functional.
+* Can Delete Favorite Place.
