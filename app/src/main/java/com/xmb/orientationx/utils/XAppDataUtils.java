@@ -2,6 +2,7 @@ package com.xmb.orientationx.utils;
 
 import android.util.Log;
 
+import com.baidu.mapapi.model.LatLng;
 import com.orhanobut.hawk.Hawk;
 import com.xmb.orientationx.constant.XDataConstants;
 import com.xmb.orientationx.constant.XTags;
@@ -21,6 +22,14 @@ public class XAppDataUtils {
     private ArrayList<XSearchInfo> favorite;
 
     private XSearchInfo[] transition;
+
+    private LatLng sPt;
+
+    private LatLng ePt;
+
+    private String sAdr;
+
+    private String eAdr;
 
     private static final XAppDataUtils instance = new XAppDataUtils();
 
@@ -95,4 +104,35 @@ public class XAppDataUtils {
         return transition[position];
     }
 
+    public LatLng getsPt() {
+        return Hawk.get(XDataConstants.START_POINT, new LatLng(0, 0));
+    }
+
+    public void setsPt(LatLng sPt) {
+        Hawk.put(XDataConstants.START_POINT, sPt);
+    }
+
+    public LatLng getePt() {
+        return Hawk.get(XDataConstants.END_POINT, new LatLng(0, 0));
+    }
+
+    public void setePt(LatLng ePt) {
+        Hawk.put(XDataConstants.END_POINT, ePt);
+    }
+
+    public String getsAdr() {
+        return Hawk.get(XDataConstants.START_ADDRESS, "");
+    }
+
+    public void setsAdr(String sAdr) {
+        Hawk.put(XDataConstants.START_ADDRESS, sAdr);
+    }
+
+    public String geteAdr() {
+        return Hawk.get(XDataConstants.END_ADDRESS, "");
+    }
+
+    public void seteAdr(String eAdr) {
+        Hawk.put(XDataConstants.END_ADDRESS, eAdr);
+    }
 }

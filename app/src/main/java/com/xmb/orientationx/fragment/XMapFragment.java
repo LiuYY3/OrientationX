@@ -17,6 +17,11 @@ import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.bikenavi.BikeNavigateHelper;
+import com.baidu.mapapi.bikenavi.adapter.IBEngineInitListener;
+import com.baidu.mapapi.bikenavi.adapter.IBRoutePlanListener;
+import com.baidu.mapapi.bikenavi.model.BikeRoutePlanError;
+import com.baidu.mapapi.bikenavi.params.BikeNaviLaunchParam;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -46,11 +51,18 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.baidu.mapapi.utils.CoordinateConverter;
+import com.baidu.mapapi.walknavi.WalkNavigateHelper;
+import com.baidu.mapapi.walknavi.adapter.IWEngineInitListener;
+import com.baidu.mapapi.walknavi.adapter.IWRoutePlanListener;
+import com.baidu.mapapi.walknavi.model.WalkRoutePlanError;
+import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.xmb.orientationx.R;
+import com.xmb.orientationx.activity.XBikeGuideActivity;
 import com.xmb.orientationx.activity.XGuideActivity;
 import com.xmb.orientationx.activity.XMapActivity;
+import com.xmb.orientationx.activity.XWalkGuideActivity;
 import com.xmb.orientationx.broadcast.XLocationClient;
 import com.xmb.orientationx.constant.XTags;
 import com.xmb.orientationx.data.XSearchInfo;
@@ -59,6 +71,7 @@ import com.xmb.orientationx.interfaces.XLocationListener;
 import com.xmb.orientationx.interfaces.XSelectListener;
 import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.message.XSearchMessageEvent;
+import com.xmb.orientationx.utils.XAppDataUtils;
 import com.xmb.orientationx.utils.XUtils;
 
 import java.io.File;
@@ -98,6 +111,8 @@ public class XMapFragment extends Fragment implements XLocationListener,
     private PlanNode mStNode, mEnNode;
     private String mSDCardPath;
     private GeoCoder mGeoCoder;
+    private WalkNavigateHelper mWalkHelper;
+    private BikeNavigateHelper mBikeHelper;
 
     private boolean isFirst = true;
 
@@ -114,10 +129,75 @@ public class XMapFragment extends Fragment implements XLocationListener,
     };
 
     @Override
-    public void onClick() {
-        if (BaiduNaviManager.isNaviInited()) {
-            doStartNavigator();
+    public void onClick(int click) {
+        switch (click) {
+            case 0:
+                if (BaiduNaviManager.isNaviInited()) {
+                    doStartNavigator();
+                }
+                break;
+            case 2:
+                doBikeNavigator();
+                break;
+            default:
+                break;
         }
+    }
+
+    private void doBikeNavigator() {
+        final BikeNaviLaunchParam param = new BikeNaviLaunchParam().stPt(mMyPosition).endPt(mDestination);
+        mBikeHelper = BikeNavigateHelper.getInstance();
+        mBikeHelper.initNaviEngine(this.getActivity(), new IBEngineInitListener() {
+            @Override
+            public void engineInitSuccess() {
+                bikeRoutePlan(param);
+            }
+
+            @Override
+            public void engineInitFail() {
+
+            }
+        });
+    }
+
+    private void bikeRoutePlan(BikeNaviLaunchParam param) {
+        mBikeHelper.routePlanWithParams(param, new IBRoutePlanListener() {
+            @Override
+            public void onRoutePlanStart() {
+
+            }
+
+            @Override
+            public void onRoutePlanSuccess() {
+                Intent intent = new Intent(XMapFragment.this.getActivity(), XBikeGuideActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onRoutePlanFail(BikeRoutePlanError bikeRoutePlanError) {
+
+            }
+        });
+    }
+
+    private void walkRoutePlan(WalkNaviLaunchParam param) {
+        mWalkHelper.routePlanWithParams(param, new IWRoutePlanListener() {
+            @Override
+            public void onRoutePlanStart() {
+
+            }
+
+            @Override
+            public void onRoutePlanSuccess() {
+                Intent intent = new Intent(XMapFragment.this.getActivity(), XWalkGuideActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onRoutePlanFail(WalkRoutePlanError walkRoutePlanError) {
+
+            }
+        });
     }
 
     @Override
@@ -198,6 +278,8 @@ public class XMapFragment extends Fragment implements XLocationListener,
     public void onLocationChange(BDLocation location) {
         mMyLocation = location;
         mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        XAppDataUtils.getInstance().setsPt(mMyPosition);
+        XAppDataUtils.getInstance().setsAdr(mMyLocation.getAddrStr());
         mLocateCity = location.getCity();
 
         mMap.setMyLocationData(new MyLocationData.Builder()
@@ -251,6 +333,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
     @Override
     public void onSelected(XSearchInfo info) {
         mDestination = info.getPt();
+        XAppDataUtils.getInstance().setePt(mDestination);
 
         if (!TextUtils.isEmpty(info.getAddress().trim())) {
             mDestinationAddress = info.getAddress();
@@ -260,7 +343,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
             mDestinationAddress = "";
         }
 
-
+        XAppDataUtils.getInstance().seteAdr(mDestinationAddress);
         if (mDestinationMarker != null) {
             mDestinationMarker.remove();
         }

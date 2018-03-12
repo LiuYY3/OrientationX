@@ -30,6 +30,8 @@ public class XAccountActivity extends XBaseActivity {
     Button mToSetButton;
     @BindView(R.id.id_to_profile_favorite_btn)
     Button mToFavoriteButton;
+    @BindView(R.id.id_to_profile_navigation_btn)
+    Button mToPlanGuideButton;
 
     @BindString(R.string.app_profile)
     String profile;
@@ -70,6 +72,14 @@ public class XAccountActivity extends XBaseActivity {
             @Override
             public void accept(Object o) throws Exception {
                 Intent intent = new Intent(XAccountActivity.this, XFavoriteActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        RxView.clicks(mToPlanGuideButton).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                Intent intent = new Intent(XAccountActivity.this, XPlanGuideActivity.class);
                 startActivity(intent);
             }
         });

@@ -12,4 +12,12 @@ public class XDataConstants {
 
     public static final String TRANSITION = "TRAN";
 
+    public static final String START_POINT = "SPT";
+
+    public static final String END_POINT = "EPT";
+
+    public static final String START_ADDRESS = "SADR";
+
+    public static final String END_ADDRESS = "EADR";
+
 }
