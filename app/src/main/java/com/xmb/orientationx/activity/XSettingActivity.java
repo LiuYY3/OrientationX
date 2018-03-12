@@ -10,6 +10,7 @@ import com.xmb.orientationx.R;
 import com.xmb.orientationx.exception.XBaseException;
 import com.xmb.orientationx.utils.StatusBarUtil;
 
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +41,7 @@ public class XSettingActivity extends XBaseActivity {
     }
 
     private void initViews() {
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/LobsterTwo-Bold.ttf");
-        mNameTextView.setTypeface(typeface);
-        mNameTextView.setText(setting);
+        this.showTitle(true, setting);
     }
 
     private void initRxBindings() {

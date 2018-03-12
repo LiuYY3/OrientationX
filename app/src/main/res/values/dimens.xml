@@ -9,6 +9,7 @@
     <dimen name="dimen_route_icon_bot">30dp</dimen>
     <dimen name="dimen_btn_width">60dp</dimen>
     <dimen name="dimen_btn_half_width">30dp</dimen>
+    <dimen name="dimen_btn_over_half_width">90dp</dimen>
     <dimen name="dimen_edit_height">40dp</dimen>
     <dimen name="dimen_guide_top">80dp</dimen>
     <dimen name="dimen_oval_radius">500dp</dimen>
@@ -21,6 +22,7 @@
     <dimen name="dimen_splash_author">20sp</dimen>
 
     <!--num picker-->
+    <dimen name="dimen_margin_8">8dp</dimen>
     <dimen name="dimen_margin_15">15dp</dimen>
     <dimen name="dimen_margin_20">20dp</dimen>
     <dimen name="dimen_margin_30">30dp</dimen>
@@ -32,6 +34,7 @@
     <dimen name="dimen_height_40">40dp</dimen>
     <dimen name="dimen_height_50">50dp</dimen>
     <dimen name="dimen_height_74">74dp</dimen>
+    <dimen name="dimen_height_80">80dp</dimen>
 
     <dimen name="dimen_blur_2">2dp</dimen>
 

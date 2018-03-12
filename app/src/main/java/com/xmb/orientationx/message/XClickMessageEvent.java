@@ -18,9 +18,9 @@ public class XClickMessageEvent {
         return instance;
     }
 
-    public void setClick() {
+    public void setClick(int click) {
         if (clickListener != null) {
-            clickListener.onClick();
+            clickListener.onClick(click);
         }
     }
 

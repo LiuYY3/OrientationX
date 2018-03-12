@@ -199,6 +199,7 @@ public class XSearchFragment extends Fragment implements XCityListener,
         mSearchResults = new ArrayList<XSearchInfo>();
 
         if (XUtils.checkEmptyList(mFavoriteResults)) {
+            Log.i("check", "updateSearchResults: " + mFavoriteResults.size());
             for (XSearchInfo info : mFavoriteResults) {
                 sugKeys.add(info.getName());
                 mSearchResults.add(info);
@@ -209,6 +210,7 @@ public class XSearchFragment extends Fragment implements XCityListener,
             for (XSearchInfo info : mDataBaseResults) {
                 if (!sugKeys.contains(info.getName())) {
                     sugKeys.add(info.getName());
+                    info.setSave(false);
                     mSearchResults.add(info);
                 }
             }

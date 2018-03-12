@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/id_favorite_top"
+        layout="@layout/ui_common_title"/>
+
+    <Button
+        android:id="@+id/id_favorite_del_btn"
+        android:background="@color/colorGray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_margin_8"
+        android:layout_marginEnd="@dimen/dimen_margin_8"
+        android:layout_marginTop="@dimen/dimen_margin_8"
+        android:layout_marginBottom="@dimen/dimen_margin_30"
+        android:textAllCaps="false"
+        android:text="@string/app_delete"
+        android:textColor="@android:color/white"
+        android:layout_alignParentBottom="true"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_above="@id/id_favorite_del_btn"
+        android:id="@+id/id_favorite_recycler"
+        android:layout_below="@id/id_favorite_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

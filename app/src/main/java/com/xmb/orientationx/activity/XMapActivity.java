@@ -149,7 +149,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
             @Override
             public void accept(Boolean b) throws Exception {
                 if (!b) {
-                    XClickMessageEvent.getInstance().setClick();
+                    XClickMessageEvent.getInstance().setClick(0);
                 } else {
                     Toast.makeText(XMapActivity.this, "Please input something !", Toast.LENGTH_SHORT).show();
                 }

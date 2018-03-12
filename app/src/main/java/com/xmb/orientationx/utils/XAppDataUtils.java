@@ -2,6 +2,7 @@ package com.xmb.orientationx.utils;
 
 import android.util.Log;
 
+import com.baidu.mapapi.model.LatLng;
 import com.orhanobut.hawk.Hawk;
 import com.xmb.orientationx.constant.XDataConstants;
 import com.xmb.orientationx.constant.XTags;
@@ -19,6 +20,16 @@ public class XAppDataUtils {
     private ArrayList<XSearchInfo> searchHistory;
 
     private ArrayList<XSearchInfo> favorite;
+
+    private XSearchInfo[] transition;
+
+    private LatLng sPt;
+
+    private LatLng ePt;
+
+    private String sAdr;
+
+    private String eAdr;
 
     private static final XAppDataUtils instance = new XAppDataUtils();
 
@@ -72,5 +83,56 @@ public class XAppDataUtils {
         }
         favorite.remove(temp);
         Hawk.put(XDataConstants.FAVORITE, favorite);
+    }
+
+    public void updateTransition(int size) {
+        transition = new XSearchInfo[size];
+        Hawk.put(XDataConstants.TRANSITION, transition);
+    }
+
+    public void setTransition(int size, int position, XSearchInfo info) {
+        transition = Hawk.get(XDataConstants.TRANSITION, new XSearchInfo[size]);
+        transition[position] = info;
+        Hawk.put(XDataConstants.TRANSITION, transition);
+    }
+
+    public XSearchInfo getTransition(int size, int position) {
+        transition = new XSearchInfo[size];
+        if (Hawk.get(XDataConstants.TRANSITION, new XSearchInfo[size]).length == size) {
+            transition = Hawk.get(XDataConstants.TRANSITION, new XSearchInfo[size]);
+        }
+        return transition[position];
+    }
+
+    public LatLng getsPt() {
+        return Hawk.get(XDataConstants.START_POINT, new LatLng(0, 0));
+    }
+
+    public void setsPt(LatLng sPt) {
+        Hawk.put(XDataConstants.START_POINT, sPt);
+    }
+
+    public LatLng getePt() {
+        return Hawk.get(XDataConstants.END_POINT, new LatLng(0, 0));
+    }
+
+    public void setePt(LatLng ePt) {
+        Hawk.put(XDataConstants.END_POINT, ePt);
+    }
+
+    public String getsAdr() {
+        return Hawk.get(XDataConstants.START_ADDRESS, "");
+    }
+
+    public void setsAdr(String sAdr) {
+        Hawk.put(XDataConstants.START_ADDRESS, sAdr);
+    }
+
+    public String geteAdr() {
+        return Hawk.get(XDataConstants.END_ADDRESS, "");
+    }
+
+    public void seteAdr(String eAdr) {
+        Hawk.put(XDataConstants.END_ADDRESS, eAdr);
     }
 }

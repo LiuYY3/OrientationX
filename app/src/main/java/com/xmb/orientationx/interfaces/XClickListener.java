@@ -5,5 +5,5 @@ package com.xmb.orientationx.interfaces;
  */
 
 public interface XClickListener {
-    void onClick();
+    void onClick(int click);
 }
