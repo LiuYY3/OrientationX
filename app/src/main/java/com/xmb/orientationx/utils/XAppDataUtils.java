@@ -31,6 +31,8 @@ public class XAppDataUtils {
 
     private String eAdr;
 
+    private double distance;
+
     private static final XAppDataUtils instance = new XAppDataUtils();
 
     public static XAppDataUtils getInstance() {
@@ -134,5 +136,14 @@ public class XAppDataUtils {
 
     public void seteAdr(String eAdr) {
         Hawk.put(XDataConstants.END_ADDRESS, eAdr);
+    }
+
+    public double getDistance() {
+        double i = 0;
+        return Hawk.get(XDataConstants.DISTANCE, i);
+    }
+
+    public void setDistance(double distance) {
+        Hawk.put(XDataConstants.DISTANCE, distance);
     }
 }

@@ -107,6 +107,7 @@
                     android:textSize="@dimen/dimen_input_txt_size"
                     android:text="@string/app_to_profile_location"/>
                 <Button
+                    android:id="@+id/id_cal_distance_btn"
                     android:layout_weight="1"
                     android:layout_margin="@dimen/dimen_margin_8"
                     android:layout_gravity="center_vertical"
@@ -116,7 +117,7 @@
                     android:background="@android:color/white"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/dimen_input_txt_size"
-                    android:text="@string/app_to_map"/>
+                    android:text="@string/app_to_cal_distance"/>
 
             </LinearLayout>
 

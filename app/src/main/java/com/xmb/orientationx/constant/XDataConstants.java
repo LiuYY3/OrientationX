@@ -20,4 +20,6 @@ public class XDataConstants {
 
     public static final String END_ADDRESS = "EADR";
 
+    public static final String DISTANCE = "DIS";
+
 }

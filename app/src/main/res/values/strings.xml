@@ -23,4 +23,6 @@
     <string name="app_to_profile_favorite">收</string>
     <string name="app_to_profile_location">常</string>
 
+    <string name="app_to_cal_distance">测</string>
+
 </resources>

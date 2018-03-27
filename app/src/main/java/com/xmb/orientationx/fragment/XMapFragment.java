@@ -51,6 +51,7 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.baidu.mapapi.utils.CoordinateConverter;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.baidu.mapapi.walknavi.WalkNavigateHelper;
 import com.baidu.mapapi.walknavi.adapter.IWEngineInitListener;
 import com.baidu.mapapi.walknavi.adapter.IWRoutePlanListener;
@@ -113,6 +114,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
     private GeoCoder mGeoCoder;
     private WalkNavigateHelper mWalkHelper;
     private BikeNavigateHelper mBikeHelper;
+    private double mPtsDistance = 0;
 
     private boolean isFirst = true;
 
@@ -242,14 +244,20 @@ public class XMapFragment extends Fragment implements XLocationListener,
         if (XUtils.checkEmptyList(drivingRouteResult.getRouteLines())) {
             DrivingRouteLine drive = drivingRouteResult.getRouteLines().get(0);
             if (XUtils.checkEmptyList(drive.getAllStep())) {
+                mPtsDistance = 0;
                 for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
                     if (XUtils.checkEmptyList(step.getWayPoints())) {
                         mPolyline = new PolylineOptions().width(8)
                                 .color(getResources().getColor(R.color.colorBlack)).points(step.getWayPoints());
                         mRoute = mMap.addOverlay(mPolyline);
+                        for (int i = 0; i < step.getWayPoints().size() - 1; i++) {
+                            mPtsDistance = mPtsDistance + DistanceUtil.getDistance(step.getWayPoints().get(i), step.getWayPoints().get(i + 1));
+                        }
                         mRoutes.add(mRoute);
                     }
                 }
+                XAppDataUtils.getInstance().setDistance(mPtsDistance);
+                Log.i("Distance", "onGetDrivingRouteResult: " + mPtsDistance);
             }
         }
     }
