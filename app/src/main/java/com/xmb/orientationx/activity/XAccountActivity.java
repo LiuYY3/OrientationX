@@ -42,6 +42,8 @@ public class XAccountActivity extends XBaseActivity {
     Button mToDistanceButton;
     @BindView(R.id.id_to_profile_style_btn)
     Button mToSwitchMapButton;
+    @BindView(R.id.id_to_profile_multi_location_btn)
+    Button mToMultiButton;
 
     @BindString(R.string.app_profile)
     String profile;
@@ -139,6 +141,14 @@ public class XAccountActivity extends XBaseActivity {
                     mToSwitchMapButton.setText("平面");
 
                 }
+            }
+        });
+
+        RxView.clicks(mToMultiButton).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                Intent intent = new Intent(XAccountActivity.this, XMultiLocationActivity.class);
+                startActivity(intent);
             }
         });
     }

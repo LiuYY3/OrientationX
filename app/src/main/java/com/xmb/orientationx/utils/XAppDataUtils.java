@@ -36,6 +36,8 @@ public class XAppDataUtils {
 
     private String style;
 
+    private double linearDistance;
+
     private static final XAppDataUtils instance = new XAppDataUtils();
 
     public static XAppDataUtils getInstance() {
@@ -156,5 +158,14 @@ public class XAppDataUtils {
 
     public void setStyle(String style) {
         Hawk.put(XDataConstants.MAP_STYLE, style);
+    }
+
+    public double getLinearDistance() {
+        double i = 0;
+        return Hawk.get(XDataConstants.LINEAR_DISTANCE, i);
+    }
+
+    public void setLinearDistance(double linearDistance) {
+        Hawk.put(XDataConstants.LINEAR_DISTANCE, linearDistance);
     }
 }

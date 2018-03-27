@@ -17,6 +17,8 @@ public class XDistanceActivity extends XBaseActivity {
 
     @BindView(R.id.id_distance_txt)
     TextView mDistanceTextView;
+    @BindView(R.id.id_linear_distance_txt)
+    TextView mLinearDistanceTextView;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
@@ -24,5 +26,6 @@ public class XDistanceActivity extends XBaseActivity {
         setContentView(R.layout.activity_cal_distance);
         ButterKnife.bind(this);
         mDistanceTextView.setText(String.valueOf(XAppDataUtils.getInstance().getDistance()));
+        mLinearDistanceTextView.setText(String.valueOf(XAppDataUtils.getInstance().getLinearDistance()));
     }
 }

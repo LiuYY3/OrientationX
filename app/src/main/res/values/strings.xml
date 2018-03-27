@@ -24,5 +24,6 @@
     <string name="app_to_profile_location">常</string>
     <string name="app_to_profile_style">平面</string>
     <string name="app_to_cal_distance">测</string>
+    <string name="app_to_profile_multi_location">多地</string>
 
 </resources>

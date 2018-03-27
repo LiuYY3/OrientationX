@@ -40,7 +40,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="ujXPGLm0yO6twkchu6gpjZM86OvCZ0fB" />
+            android:value="jxtUrcXEoqr2OS7ip3Gt0MpnVQd0K4h9" />
 
         <activity
             android:name="com.xmb.orientationx.activity.XBaseActivity"/>
@@ -72,6 +72,9 @@
             android:launchMode="singleTop"/>
 
         <activity android:name=".activity.XDistanceActivity"
+            android:launchMode="singleTop"/>
+
+        <activity android:name=".activity.XMultiLocationActivity"
             android:launchMode="singleTop"/>
 
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>

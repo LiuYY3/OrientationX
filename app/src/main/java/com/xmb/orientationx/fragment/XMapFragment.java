@@ -69,9 +69,11 @@ import com.xmb.orientationx.constant.XTags;
 import com.xmb.orientationx.data.XSearchInfo;
 import com.xmb.orientationx.interfaces.XClickListener;
 import com.xmb.orientationx.interfaces.XLocationListener;
+import com.xmb.orientationx.interfaces.XMultiLocationListener;
 import com.xmb.orientationx.interfaces.XSelectListener;
 import com.xmb.orientationx.interfaces.XSwitchListener;
 import com.xmb.orientationx.message.XClickMessageEvent;
+import com.xmb.orientationx.message.XMultiLocationMessageEvent;
 import com.xmb.orientationx.message.XSearchMessageEvent;
 import com.xmb.orientationx.message.XSwitchMessageEvent;
 import com.xmb.orientationx.utils.XAppDataUtils;
@@ -93,6 +95,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
         XSelectListener,
         XClickListener,
         XSwitchListener,
+        XMultiLocationListener,
         OnGetRoutePlanResultListener {
 
     @BindView(R.id.id_main_map)
@@ -136,7 +139,107 @@ public class XMapFragment extends Fragment implements XLocationListener,
                 mMap.setBaiduHeatMapEnabled(false);
                 break;
         }
-    };
+    }
+
+    @Override
+    public void onLocations(XSearchInfo[] xSearchInfos) {
+        mMap.clear();
+
+        if (xSearchInfos[0].getPt() != null) {
+            doShowMarker(xSearchInfos[0].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
+        }
+
+        if (xSearchInfos[1].getPt() != null) {
+            doShowMarker(xSearchInfos[1].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
+        }
+
+        if (xSearchInfos[2].getPt() != null) {
+            doShowMarker(xSearchInfos[2].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
+        }
+
+        if (xSearchInfos[3].getPt() != null) {
+            doShowMarker(xSearchInfos[3].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
+        }
+
+        if (xSearchInfos[4].getPt() != null) {
+            doShowMarker(xSearchInfos[4].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
+        }
+
+        if (xSearchInfos[0].getPt() != null && xSearchInfos[1].getPt() != null) {
+            doMultiRouteSearch(R.color.colorBlack, xSearchInfos[0].getPt(), xSearchInfos[1].getPt());
+        }
+
+        if (xSearchInfos[1].getPt() != null && xSearchInfos[2].getPt() != null) {
+            doMultiRouteSearch(R.color.colorRed, xSearchInfos[1].getPt(), xSearchInfos[2].getPt());
+        }
+
+        if (xSearchInfos[2].getPt() != null && xSearchInfos[3].getPt() != null) {
+            doMultiRouteSearch(R.color.colorBlue, xSearchInfos[2].getPt(), xSearchInfos[3].getPt());
+        }
+
+        if (xSearchInfos[3].getPt() != null && xSearchInfos[4].getPt() != null) {
+            doMultiRouteSearch(R.color.colorGreen, xSearchInfos[3].getPt(), xSearchInfos[4].getPt());
+        }
+    }
+
+    private void doMultiRouteSearch(final int rcolor, LatLng st, LatLng ed) {
+        mRoutePlanSearch = RoutePlanSearch.newInstance();
+        mRoutePlanSearch.setOnGetRoutePlanResultListener(new OnGetRoutePlanResultListener() {
+            @Override
+            public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
+
+            }
+
+            @Override
+            public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
+
+            }
+
+            @Override
+            public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
+
+            }
+
+            @Override
+            public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
+                if (XUtils.checkEmptyList(drivingRouteResult.getRouteLines())) {
+                    DrivingRouteLine drive = drivingRouteResult.getRouteLines().get(0);
+                    if (XUtils.checkEmptyList(drive.getAllStep())) {
+                        for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
+                            if (XUtils.checkEmptyList(step.getWayPoints())) {
+                                mPolyline = new PolylineOptions().width(8)
+                                        .color(getResources().getColor(rcolor)).points(step.getWayPoints());
+                                mRoute = mMap.addOverlay(mPolyline);
+                                for (int i = 0; i < step.getWayPoints().size() - 1; i++) {
+                                    mPtsDistance = mPtsDistance + DistanceUtil.getDistance(step.getWayPoints().get(i), step.getWayPoints().get(i + 1));
+                                }
+                                mRoutes.add(mRoute);
+                            }
+                        }
+                        XAppDataUtils.getInstance().setDistance(mPtsDistance);
+                        Log.i("Distance", "onGetDrivingRouteResult: " + mPtsDistance);
+                    }
+                }
+            }
+
+            @Override
+            public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
+
+            }
+
+            @Override
+            public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
+
+            }
+        });
+        mStNode = PlanNode.withLocation(st);
+        mEnNode = PlanNode.withLocation(ed);
+
+        mRoutePlanSearch.drivingSearch((new DrivingRoutePlanOption())
+                .from(mStNode)
+                .to(mEnNode)
+        );
+    }
 
     private OnGetGeoCoderResultListener mGeoListener = new OnGetGeoCoderResultListener() {
         @Override
@@ -353,6 +456,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
         XSearchMessageEvent.getInstance().setSelectListener(this);
         XClickMessageEvent.getInstance().setClickListener(this);
         XSwitchMessageEvent.getInstance().setSwitchListener(this);
+        XMultiLocationMessageEvent.getInstance().setMultiLocationListener(this);
         if (initDirs()) {
             initNavigator();
         }
@@ -363,6 +467,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
     public void onSelected(XSearchInfo info) {
         mDestination = info.getPt();
         XAppDataUtils.getInstance().setePt(mDestination);
+        XAppDataUtils.getInstance().setLinearDistance(DistanceUtil.getDistance(mMyPosition, mDestination));
 
         if (!TextUtils.isEmpty(info.getAddress().trim())) {
             mDestinationAddress = info.getAddress();

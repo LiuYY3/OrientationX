@@ -3,10 +3,12 @@ package com.xmb.orientationx.viewholder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xmb.orientationx.R;
+import com.xmb.orientationx.adaptor.XMultiSearchAdaptor;
 import com.xmb.orientationx.adaptor.XSearchAdaptor.ItemSelectedListener;
 
 import butterknife.ButterKnife;
@@ -40,6 +42,17 @@ public class XSearchViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View view) {
                 if (listener != null) {
                     listener.onItemSelected(position);
+                }
+            }
+        });
+    }
+
+    public void bind(final int style, final int position, final XMultiSearchAdaptor.MultiSelectedListener listener) {
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onItemSelected(style, position);
                 }
             }
         });
