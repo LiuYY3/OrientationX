@@ -22,4 +22,6 @@ public class XDataConstants {
 
     public static final String DISTANCE = "DIS";
 
+    public static final String MAP_STYLE = "STYLE";
+
 }

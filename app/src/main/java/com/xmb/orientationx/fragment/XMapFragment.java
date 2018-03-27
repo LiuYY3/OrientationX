@@ -70,8 +70,10 @@ import com.xmb.orientationx.data.XSearchInfo;
 import com.xmb.orientationx.interfaces.XClickListener;
 import com.xmb.orientationx.interfaces.XLocationListener;
 import com.xmb.orientationx.interfaces.XSelectListener;
+import com.xmb.orientationx.interfaces.XSwitchListener;
 import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.message.XSearchMessageEvent;
+import com.xmb.orientationx.message.XSwitchMessageEvent;
 import com.xmb.orientationx.utils.XAppDataUtils;
 import com.xmb.orientationx.utils.XUtils;
 
@@ -90,6 +92,7 @@ import butterknife.Unbinder;
 public class XMapFragment extends Fragment implements XLocationListener,
         XSelectListener,
         XClickListener,
+        XSwitchListener,
         OnGetRoutePlanResultListener {
 
     @BindView(R.id.id_main_map)
@@ -117,6 +120,23 @@ public class XMapFragment extends Fragment implements XLocationListener,
     private double mPtsDistance = 0;
 
     private boolean isFirst = true;
+
+    @Override
+    public void onSwitch(String style){
+        switch (style){
+            case "a":
+                mMap.setBaiduHeatMapEnabled(true);
+                break;
+            case "b":
+                mMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                mMap.setBaiduHeatMapEnabled(false);
+                break;
+            default:
+                mMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                mMap.setBaiduHeatMapEnabled(false);
+                break;
+        }
+    };
 
     private OnGetGeoCoderResultListener mGeoListener = new OnGetGeoCoderResultListener() {
         @Override
@@ -332,6 +352,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
         mBinder = ButterKnife.bind(this, view);
         XSearchMessageEvent.getInstance().setSelectListener(this);
         XClickMessageEvent.getInstance().setClickListener(this);
+        XSwitchMessageEvent.getInstance().setSwitchListener(this);
         if (initDirs()) {
             initNavigator();
         }
@@ -379,9 +400,22 @@ public class XMapFragment extends Fragment implements XLocationListener,
     }
 
     private void initMap() {
+        int mapStyle = BaiduMap.MAP_TYPE_NORMAL;
         mMap = mMapView.getMap();
         mMap.setMyLocationEnabled(true);
-        mMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        switch (XAppDataUtils.getInstance().getStyle()) {
+            case "a":
+                mMap.setBaiduHeatMapEnabled(true);
+                break;
+            case "b":
+                mMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                mMap.setBaiduHeatMapEnabled(false);
+                break;
+            default:
+                mMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                mMap.setBaiduHeatMapEnabled(false);
+                break;
+        }
         mMapView.showZoomControls(false);
     }
 

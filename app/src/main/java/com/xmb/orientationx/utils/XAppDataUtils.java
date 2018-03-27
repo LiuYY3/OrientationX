@@ -2,6 +2,7 @@ package com.xmb.orientationx.utils;
 
 import android.util.Log;
 
+import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.model.LatLng;
 import com.orhanobut.hawk.Hawk;
 import com.xmb.orientationx.constant.XDataConstants;
@@ -32,6 +33,8 @@ public class XAppDataUtils {
     private String eAdr;
 
     private double distance;
+
+    private String style;
 
     private static final XAppDataUtils instance = new XAppDataUtils();
 
@@ -145,5 +148,13 @@ public class XAppDataUtils {
 
     public void setDistance(double distance) {
         Hawk.put(XDataConstants.DISTANCE, distance);
+    }
+
+    public String getStyle() {
+        return Hawk.get(XDataConstants.MAP_STYLE, "c");
+    }
+
+    public void setStyle(String style) {
+        Hawk.put(XDataConstants.MAP_STYLE, style);
     }
 }
