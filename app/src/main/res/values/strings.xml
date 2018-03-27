@@ -3,7 +3,7 @@
     <string name="app_name">OrientationX</string>
     <string name="app_content_description">Missing</string>
     <string name="app_input_hint">Here</string>
-    <string name="app_author">Great Creator: Xu</string>
+    <string name="app_author">Creator: Xu</string>
 
     <string name="app_edit">Edit</string>
     <string name="app_done">Done</string>
@@ -22,5 +22,6 @@
     <string name="app_to_profile_navigation">导</string>
     <string name="app_to_profile_favorite">收</string>
     <string name="app_to_profile_location">常</string>
+    <string name="app_to_profile_style">平面</string>
 
 </resources>

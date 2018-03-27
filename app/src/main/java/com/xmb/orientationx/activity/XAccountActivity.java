@@ -6,15 +6,21 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.exception.XBaseException;
+import com.xmb.orientationx.interfaces.XSwitchListener;
+import com.xmb.orientationx.message.XSwitchMessageEvent;
 import com.xmb.orientationx.utils.StatusBarUtil;
+import com.xmb.orientationx.utils.XAppDataUtils;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by lym on 2018/03/07.
@@ -32,6 +38,10 @@ public class XAccountActivity extends XBaseActivity {
     Button mToFavoriteButton;
     @BindView(R.id.id_to_profile_navigation_btn)
     Button mToPlanGuideButton;
+    @BindView(R.id.id_to_profile_style_btn)
+    Button mToSwitchMapButton;
+    private BaiduMap mMap;
+    MapView mMapView;
 
     @BindString(R.string.app_profile)
     String profile;
@@ -48,6 +58,17 @@ public class XAccountActivity extends XBaseActivity {
 
     private void initViews() {
         this.showTitle(true, profile);
+        switch (XAppDataUtils.getInstance().getStyle()) {
+            case "a":
+                mToSwitchMapButton.setText("热力");
+                break;
+            case "b":
+                mToSwitchMapButton.setText("卫星");
+                break;
+            default:
+                mToSwitchMapButton.setText("平面");
+                break;
+        }
     }
 
     private void initRxBindings() {
@@ -83,6 +104,36 @@ public class XAccountActivity extends XBaseActivity {
                 startActivity(intent);
             }
         });
+        RxView.clicks(mToSwitchMapButton).map(new Function<Object, String>() {
+            @Override
+            public String apply(Object o) throws Exception {
+                if (mToSwitchMapButton.getText().equals("平面")){
+                    return "a";
+                }else if(mToSwitchMapButton.getText().equals("热力")){
+                    return "b";
+                }else{
+                    return "c";
+                }
+
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String b) throws Exception {
+                XSwitchMessageEvent.getInstance().setSwitch(b);
+                XAppDataUtils.getInstance().setStyle(b);
+                if( b.equals("a")){
+                    mToSwitchMapButton.setText("热力");
+                }else if(b.equals("b")){
+                    mToSwitchMapButton.setText("卫星");
+
+                }else{
+                    mToSwitchMapButton.setText("平面");
+
+                }
+            }
+        });
+
+
     }
 
 }
