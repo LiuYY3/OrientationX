@@ -23,7 +23,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
- * Created by lym on 2018/03/07.
+ * Created by 徐梦笔 on 2018/03/07.
  */
 
 public class XAccountActivity extends XBaseActivity {
