@@ -31,7 +31,7 @@
                 android:layout_marginTop="@dimen/dimen_margin_20"
                 android:layout_width="@dimen/dimen_height_80"
                 android:layout_height="@dimen/dimen_height_80"
-                tools:src="@mipmap/ic_launcher_round"
+                android:src="@mipmap/ic_launcher_round"
                 app:civ_border_width="@dimen/dimen_blur_2"
                 app:civ_border_color="@color/colorHoloBlue"/>
 
@@ -46,14 +46,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/dimen_title_txt_size"
-                    tools:text="XU MENGBI"
+                    android:text="XU MENGBI"
                     android:textColor="@android:color/black"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/dimen_title_txt_size"
-                    tools:text="Sunny"
+                    android:text="Sunny"
                     android:textColor="@android:color/darker_gray"/>
 
             </LinearLayout>

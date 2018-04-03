@@ -1,5 +1,7 @@
 package com.xmb.orientationx.constant;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by lym on 2018/03/05.
  */
@@ -25,5 +27,7 @@ public class XDataConstants {
     public static final String LINEAR_DISTANCE = "LDIS";
 
     public static final String MAP_STYLE = "STYLE";
+
+    public static final String PRO_IMG = "PROIMG";
 
 }

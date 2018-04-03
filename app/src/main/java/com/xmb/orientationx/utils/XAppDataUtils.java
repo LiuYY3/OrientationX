@@ -1,5 +1,6 @@
 package com.xmb.orientationx.utils;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -37,6 +38,8 @@ public class XAppDataUtils {
     private String style;
 
     private double linearDistance;
+
+    private ArrayList<Bitmap> profileImg;
 
     private static final XAppDataUtils instance = new XAppDataUtils();
 
@@ -167,5 +170,17 @@ public class XAppDataUtils {
 
     public void setLinearDistance(double linearDistance) {
         Hawk.put(XDataConstants.LINEAR_DISTANCE, linearDistance);
+    }
+
+    public Bitmap getProfileImg() {
+        if (Hawk.get(XDataConstants.PRO_IMG) == null) {
+            return null;
+        }
+        profileImg =  Hawk.get(XDataConstants.PRO_IMG);
+        return profileImg.get(0);
+    }
+
+    public void setProfileImg(ArrayList<Bitmap> profileImg) {
+        Hawk.put(XDataConstants.PRO_IMG, profileImg);
     }
 }
