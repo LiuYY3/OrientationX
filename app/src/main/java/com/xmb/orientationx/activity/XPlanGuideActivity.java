@@ -45,7 +45,7 @@ public class XPlanGuideActivity extends XBaseActivity {
         mStartEditText.setText(XAppDataUtils.getInstance().getsAdr());
         mEndEditText.setText(XAppDataUtils.getInstance().geteAdr());
         mStartEditText.setEnabled(false);
-        mEndEditText.setEnabled(false);
+//        mEndEditText.setEnabled(false);
     }
 
     private void initRxBindings() {

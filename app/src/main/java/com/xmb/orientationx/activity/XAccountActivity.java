@@ -13,6 +13,7 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -46,16 +47,18 @@ public class XAccountActivity extends XBaseActivity {
     Button mBackToMapButton;
     @BindView(R.id.id_to_setting_btn)
     Button mToSetButton;
-    @BindView(R.id.id_to_profile_favorite_btn)
-    Button mToFavoriteButton;
-    @BindView(R.id.id_to_profile_navigation_btn)
-    Button mToPlanGuideButton;
-    @BindView(R.id.id_cal_distance_btn)
-    Button mToDistanceButton;
-    @BindView(R.id.id_to_profile_style_btn)
-    Button mToSwitchMapButton;
-    @BindView(R.id.id_to_profile_multi_location_btn)
-    Button mToMultiButton;
+    @BindView(R.id.id_to_profile_favorite_layout)
+    LinearLayout mToFavoriteLayout;
+    @BindView(R.id.id_to_profile_navigation_layout)
+    LinearLayout mToPlanGuideLayout;
+    @BindView(R.id.id_cal_distance_layout)
+    LinearLayout mToDistanceLayout;
+    @BindView(R.id.id_to_profile_style_layout)
+    LinearLayout mToSwitchMapLayout;
+    @BindView(R.id.id_to_profile_multi_location_layout)
+    LinearLayout mToMultiLayout;
+    @BindView(R.id.id_to_profile_style_txt)
+    TextView mToSwitchTextView;
     @BindView(R.id.id_profile_img)
     ImageView mProfileImage;
 
@@ -82,13 +85,13 @@ public class XAccountActivity extends XBaseActivity {
         this.showTitle(true, profile);
         switch (XAppDataUtils.getInstance().getStyle()) {
             case "a":
-                mToSwitchMapButton.setText("热力");
+                mToSwitchTextView.setText("热力");
                 break;
             case "b":
-                mToSwitchMapButton.setText("卫星");
+                mToSwitchTextView.setText("卫星");
                 break;
             default:
-                mToSwitchMapButton.setText("平面");
+                mToSwitchTextView.setText("平面");
                 break;
         }
 
@@ -116,7 +119,7 @@ public class XAccountActivity extends XBaseActivity {
             }
         });
 
-        RxView.clicks(mToFavoriteButton).subscribe(new Consumer<Object>() {
+        RxView.clicks(mToFavoriteLayout).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception {
                 Intent intent = new Intent(XAccountActivity.this, XFavoriteActivity.class);
@@ -124,7 +127,7 @@ public class XAccountActivity extends XBaseActivity {
             }
         });
 
-        RxView.clicks(mToPlanGuideButton).subscribe(new Consumer<Object>() {
+        RxView.clicks(mToPlanGuideLayout).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception {
                 Intent intent = new Intent(XAccountActivity.this, XPlanGuideActivity.class);
@@ -132,7 +135,7 @@ public class XAccountActivity extends XBaseActivity {
             }
         });
 
-        RxView.clicks(mToDistanceButton).subscribe(new Consumer<Object>() {
+        RxView.clicks(mToDistanceLayout).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception {
                 Intent intent = new Intent(XAccountActivity.this, XDistanceActivity.class);
@@ -140,12 +143,12 @@ public class XAccountActivity extends XBaseActivity {
             }
         });
 
-        RxView.clicks(mToSwitchMapButton).map(new Function<Object, String>() {
+        RxView.clicks(mToSwitchMapLayout).map(new Function<Object, String>() {
             @Override
             public String apply(Object o) throws Exception {
-                if (mToSwitchMapButton.getText().equals("平面")){
+                if (mToSwitchTextView.getText().equals("平面")){
                     return "a";
-                }else if(mToSwitchMapButton.getText().equals("热力")){
+                }else if(mToSwitchTextView.getText().equals("热力")){
                     return "b";
                 }else{
                     return "c";
@@ -158,18 +161,18 @@ public class XAccountActivity extends XBaseActivity {
                 XSwitchMessageEvent.getInstance().setSwitch(b);
                 XAppDataUtils.getInstance().setStyle(b);
                 if( b.equals("a")){
-                    mToSwitchMapButton.setText("热力");
+                    mToSwitchTextView.setText("热力");
                 }else if(b.equals("b")){
-                    mToSwitchMapButton.setText("卫星");
+                    mToSwitchTextView.setText("卫星");
 
                 }else{
-                    mToSwitchMapButton.setText("平面");
+                    mToSwitchTextView.setText("平面");
 
                 }
             }
         });
 
-        RxView.clicks(mToMultiButton).subscribe(new Consumer<Object>() {
+        RxView.clicks(mToMultiLayout).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception {
                 Intent intent = new Intent(XAccountActivity.this, XMultiLocationActivity.class);

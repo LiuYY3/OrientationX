@@ -121,6 +121,10 @@ public class XMapFragment extends Fragment implements XLocationListener,
     private WalkNavigateHelper mWalkHelper;
     private BikeNavigateHelper mBikeHelper;
     private double mPtsDistance = 0;
+    private double mStartLat;
+    private double mStartLng;
+    private String mStartAddress;
+    private LatLng mStartPosition;
 
     private boolean isFirst = true;
 
@@ -258,19 +262,30 @@ public class XMapFragment extends Fragment implements XLocationListener,
         switch (click) {
             case 0:
                 if (BaiduNaviManager.isNaviInited()) {
-                    doStartNavigator();
+                    BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
+                            mMyPosition.latitude,
+                            mMyLocation.getAddrStr(),
+                            null,
+                            BNRoutePlanNode.CoordinateType.GCJ02);
+
+                    BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.longitude,
+                            mDestination.latitude,
+                            mDestinationAddress,
+                            null,
+                            BNRoutePlanNode.CoordinateType.GCJ02);
+                    doStartNavigator(stNode, endNode);
                 }
                 break;
             case 2:
-                doBikeNavigator();
+                BikeNaviLaunchParam param = new BikeNaviLaunchParam().stPt(mMyPosition).endPt(mDestination);
+                doBikeNavigator(param);
                 break;
             default:
                 break;
         }
     }
 
-    private void doBikeNavigator() {
-        final BikeNaviLaunchParam param = new BikeNaviLaunchParam().stPt(mMyPosition).endPt(mDestination);
+    private void doBikeNavigator(final BikeNaviLaunchParam param) {
         mBikeHelper = BikeNavigateHelper.getInstance();
         mBikeHelper.initNaviEngine(this.getActivity(), new IBEngineInitListener() {
             @Override
@@ -572,19 +587,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
         }, null, null, null);
     }
 
-    private void doStartNavigator() {
-        BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
-                mMyPosition.latitude,
-                mMyLocation.getAddrStr(),
-                null,
-                BNRoutePlanNode.CoordinateType.GCJ02);
-
-        BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.longitude,
-                mDestination.latitude,
-                mDestinationAddress,
-                null,
-                BNRoutePlanNode.CoordinateType.GCJ02);
-
+    private void doStartNavigator(BNRoutePlanNode stNode, BNRoutePlanNode endNode) {
         List<BNRoutePlanNode> list = new ArrayList<>();
         list.add(stNode);
         list.add(endNode);

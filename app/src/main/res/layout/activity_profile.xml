@@ -72,99 +72,184 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="137dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/dimen_btn_half_width"
-                android:layout_marginEnd="@dimen/dimen_btn_half_width"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/id_to_profile_navigation_btn"
+                <LinearLayout
+                    android:id="@+id/id_to_profile_navigation_layout"
                     android:layout_weight="1"
-                    android:layout_margin="@dimen/dimen_margin_8"
                     android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/dimen_input_txt_size"
-                    android:text="@string/app_to_profile_navigation"/>
-                <Button
-                    android:id="@+id/id_to_profile_location_btn"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_guide"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="导航"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_marginBottom="@dimen/dimen_margin_8"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_to_profile_location_layout"
                     android:layout_weight="1"
-                    android:layout_margin="@dimen/dimen_margin_8"
                     android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/dimen_input_txt_size"
-                    android:text="@string/app_to_profile_location"/>
-                <Button
-                    android:id="@+id/id_cal_distance_btn"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_house"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="常用地址"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_marginBottom="@dimen/dimen_margin_8"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_cal_distance_layout"
                     android:layout_weight="1"
-                    android:layout_margin="@dimen/dimen_margin_8"
                     android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/dimen_input_txt_size"
-                    android:text="@string/app_to_cal_distance"/>
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_length"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="测距"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_marginBottom="@dimen/dimen_margin_8"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/dimen_btn_half_width"
-                android:layout_marginEnd="@dimen/dimen_btn_half_width"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/id_to_profile_style_btn"
+                <LinearLayout
+                    android:id="@+id/id_to_profile_style_layout"
                     android:layout_weight="1"
-                    android:layout_margin="@dimen/dimen_margin_8"
                     android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/dimen_input_txt_size"
-                    android:text="@string/app_to_profile_style"/>
-                <Button
-                    android:id="@+id/id_to_profile_multi_location_btn"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_earth"/>
+
+                    <TextView
+                        android:id="@+id/id_to_profile_style_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"
+                        android:text="平面"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_marginBottom="@dimen/dimen_margin_8"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_to_profile_multi_location_layout"
                     android:layout_weight="1"
-                    android:layout_margin="@dimen/dimen_margin_8"
                     android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/dimen_input_txt_size"
-                    android:text="@string/app_to_profile_multi_location"/>
-                <Button
-                    android:id="@+id/id_to_profile_favorite_btn"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_multi"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="多目的地"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_marginBottom="@dimen/dimen_margin_8"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_to_profile_favorite_layout"
                     android:layout_weight="1"
-                    android:layout_margin="@dimen/dimen_margin_8"
                     android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/dimen_input_txt_size"
-                    android:text="@string/app_to_profile_favorite"/>
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_favorite"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="收藏夹"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimen_margin_8"
+                        android:layout_marginBottom="@dimen/dimen_margin_8"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 

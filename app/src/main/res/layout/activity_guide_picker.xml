@@ -16,6 +16,7 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:layout_margin="@dimen/dimen_margin_8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -23,6 +24,7 @@
         <Button
             android:id="@+id/id_bike_guide_btn"
             android:textColor="@android:color/white"
+            android:text="Bike"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -30,12 +32,14 @@
         <Button
             android:id="@+id/id_car_guide_btn"
             android:textColor="@android:color/white"
+            android:text="Car"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
         <Button
             android:id="@+id/id_bus_info_btn"
+            android:text="Bus"
             android:textColor="@android:color/white"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
