@@ -19,7 +19,10 @@ import io.reactivex.functions.Consumer;
  * Created by lym on 2018/03/27.
  */
 public class XDistanceActivity extends XBaseActivity {
-
+    @BindView(R.id.id_start_txt)
+    TextView mStartTextView;
+    @BindView(R.id.id_end_txt)
+    TextView mEndTextView;
     @BindView(R.id.id_distance_txt)
     TextView mDistanceTextView;
     @BindView(R.id.id_linear_distance_txt)
@@ -38,8 +41,13 @@ public class XDistanceActivity extends XBaseActivity {
         ButterKnife.bind(this);
         initViews();
         initRxBindings();
-        mDistanceTextView.setText(String.valueOf(XAppDataUtils.getInstance().getDistance()));
-        mLinearDistanceTextView.setText(String.valueOf(XAppDataUtils.getInstance().getLinearDistance()));
+        mStartTextView.setText(XAppDataUtils.getInstance().getsAdr()+" 到 ");
+        mEndTextView.setText(XAppDataUtils.getInstance().geteAdr()+" 的测距");
+
+        int a = (int)XAppDataUtils.getInstance().getDistance();
+        int b = (int)XAppDataUtils.getInstance().getLinearDistance();
+        mDistanceTextView.setText("实际距离为："+String.valueOf(a)+ "m");
+        mLinearDistanceTextView.setText("直线距离为："+String.valueOf(b)+"m");
     }
     private void initViews() {
         this.showTitle(true, distance);
