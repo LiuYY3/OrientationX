@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.xmb.orientationx.utils.XUtils;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
@@ -63,6 +65,10 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
     Button mBeginRouteButton;
     @BindView(R.id.id_all_search_result_recycle)
     RecyclerView mAllRecyclerView;
+    @BindString(R.string.app_guideplan)
+    String guideplan;
+    @BindView(R.id.id_activity_left_icon)
+    ImageView mBackImagView;
 
     private static final long CLICK_GAP = 500;
 
@@ -182,6 +188,8 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
         mSuggestionSearch.setOnGetSuggestionResultListener(this);
         mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
+        this.showTitle(true, guideplan);
+        this.showLeftIcon(true, R.mipmap.ic_action_arrow_left);
     }
 
     private void initRxBindings() {
@@ -269,6 +277,13 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                 } else {
                     Toast.makeText(XMultiLocationActivity.this, "need more locations", Toast.LENGTH_SHORT).show();
                 }
+                RxView.clicks(mBackImagView).subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        finish();
+                    }
+                });
+
             }
         });
     }

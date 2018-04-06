@@ -18,6 +18,9 @@
     <string name="app_setting">setting</string>
     <string name="app_favorite">Favorite</string>
     <string name="app_distance">Distance</string>
+    <string name="app_guide">Guide</string>
+    <string name="app_guideplan">GuidePlan</string>
+
 
     <!--profile-->
     <string name="app_to_profile_navigation">导</string>

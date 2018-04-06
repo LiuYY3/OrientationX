@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -16,6 +17,7 @@ import com.xmb.orientationx.message.XBusInfoMessageEvent;
 import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.utils.XAppDataUtils;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
@@ -40,6 +42,11 @@ public class XPlanGuideActivity extends XBaseActivity {
     @BindView(R.id.id_bus_info_txt)
     TextView mBusTextView;
 
+    @BindString(R.string.app_guide)
+    String guide;
+    @BindView(R.id.id_activity_left_icon)
+    ImageView mBackImagView;
+
     private String mInfo = "";
 
     @Override
@@ -52,6 +59,8 @@ public class XPlanGuideActivity extends XBaseActivity {
     }
 
     private void initViews() {
+        this.showTitle(true, guide);
+        this.showLeftIcon(true, R.mipmap.ic_action_arrow_left);
         XBusInfoMessageEvent.getInstance().setBusListener(new XBusInfoListener() {
             @Override
             public void onBusInfo(String info) {
@@ -62,10 +71,16 @@ public class XPlanGuideActivity extends XBaseActivity {
         mStartEditText.setText(XAppDataUtils.getInstance().getsAdr());
         mEndEditText.setText(XAppDataUtils.getInstance().geteAdr());
         mStartEditText.setEnabled(false);
-//        mEndEditText.setEnabled(false);
+        mEndEditText.setEnabled(false);
     }
 
     private void initRxBindings() {
+        RxView.clicks(mBackImagView).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                finish();
+            }
+        });
         RxView.clicks(mBikeGuideButton).map(new Function<Object, Boolean>() {
             @Override
             public Boolean apply(Object o) throws Exception {
