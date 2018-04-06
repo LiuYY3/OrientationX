@@ -3,6 +3,7 @@ package com.xmb.orientationx.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class XPlanGuideActivity extends XBaseActivity {
     @BindView(R.id.id_bus_info_txt)
     TextView mBusTextView;
 
+    private String mInfo = "";
+
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
         super.onCreateBase(savedInstanceState);
@@ -52,6 +55,7 @@ public class XPlanGuideActivity extends XBaseActivity {
         XBusInfoMessageEvent.getInstance().setBusListener(new XBusInfoListener() {
             @Override
             public void onBusInfo(String info) {
+                Log.i("BusInfo", "onBusInfo: " + info);
                 mBusTextView.setText(info);
             }
         });

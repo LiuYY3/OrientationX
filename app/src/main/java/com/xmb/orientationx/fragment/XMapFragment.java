@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -373,11 +374,17 @@ public class XMapFragment extends Fragment implements XLocationListener,
         if (XUtils.checkEmptyList(massTransitRouteResult.getRouteLines())) {
             MassTransitRouteLine mass = massTransitRouteResult.getRouteLines().get(0);
             if (XUtils.checkEmptyList(mass.getNewSteps())) {
+                String busInfo = "";
                 for (List<MassTransitRouteLine.TransitStep> massList : mass.getNewSteps()) {
-                    if (XUtils.checkEmptyList(massList) && !TextUtils.isEmpty(massList.get(0).getInstructions())) {
-                        XBusInfoMessageEvent.getInstance().setInfo(massList.get(0).getInstructions());
+                    if (XUtils.checkEmptyList(massList)) {
+                        for (MassTransitRouteLine.TransitStep step : massList) {
+                            if (!TextUtils.isEmpty(step.getInstructions())) {
+                                busInfo = busInfo + "\n" + step.getInstructions();
+                            }
+                        }
                     }
                 }
+                XBusInfoMessageEvent.getInstance().setInfo(busInfo);
             }
         }
     }
