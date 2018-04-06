@@ -44,6 +44,7 @@ import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.IndoorRouteResult;
 import com.baidu.mapapi.search.route.MassTransitRouteLine;
+import com.baidu.mapapi.search.route.MassTransitRoutePlanOption;
 import com.baidu.mapapi.search.route.MassTransitRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
@@ -72,6 +73,7 @@ import com.xmb.orientationx.interfaces.XLocationListener;
 import com.xmb.orientationx.interfaces.XMultiLocationListener;
 import com.xmb.orientationx.interfaces.XSelectListener;
 import com.xmb.orientationx.interfaces.XSwitchListener;
+import com.xmb.orientationx.message.XBusInfoMessageEvent;
 import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.message.XMultiLocationMessageEvent;
 import com.xmb.orientationx.message.XSearchMessageEvent;
@@ -259,29 +261,35 @@ public class XMapFragment extends Fragment implements XLocationListener,
 
     @Override
     public void onClick(int click) {
-        switch (click) {
-            case 0:
-                if (BaiduNaviManager.isNaviInited()) {
-                    BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
-                            mMyPosition.latitude,
-                            mMyLocation.getAddrStr(),
-                            null,
-                            BNRoutePlanNode.CoordinateType.GCJ02);
+        if (mDestination != null) {
+            switch (click) {
+                case 0:
+                    if (BaiduNaviManager.isNaviInited()) {
+                        BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
+                                mMyPosition.latitude,
+                                mMyLocation.getAddrStr(),
+                                null,
+                                BNRoutePlanNode.CoordinateType.GCJ02);
 
-                    BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.longitude,
-                            mDestination.latitude,
-                            mDestinationAddress,
-                            null,
-                            BNRoutePlanNode.CoordinateType.GCJ02);
-                    doStartNavigator(stNode, endNode);
-                }
-                break;
-            case 2:
-                BikeNaviLaunchParam param = new BikeNaviLaunchParam().stPt(mMyPosition).endPt(mDestination);
-                doBikeNavigator(param);
-                break;
-            default:
-                break;
+                        BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.longitude,
+                                mDestination.latitude,
+                                mDestinationAddress,
+                                null,
+                                BNRoutePlanNode.CoordinateType.GCJ02);
+                        doStartNavigator(stNode, endNode);
+                    }
+                    break;
+                case 2:
+                    BikeNaviLaunchParam param = new BikeNaviLaunchParam().stPt(mMyPosition).endPt(mDestination);
+                    doBikeNavigator(param);
+                    break;
+                default:
+                    PlanNode st = PlanNode.withLocation(mMyPosition);
+                    PlanNode ed = PlanNode.withLocation(mDestination);
+
+                    mRoutePlanSearch.masstransitSearch((new MassTransitRoutePlanOption().from(st).to(ed)));
+                    break;
+            }
         }
     }
 
@@ -364,13 +372,10 @@ public class XMapFragment extends Fragment implements XLocationListener,
     public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
         if (XUtils.checkEmptyList(massTransitRouteResult.getRouteLines())) {
             MassTransitRouteLine mass = massTransitRouteResult.getRouteLines().get(0);
-            if (XUtils.checkEmptyList(mass.getAllStep())) {
-                for (MassTransitRouteLine.TransitStep step : mass.getAllStep()) {
-                    if (XUtils.checkEmptyList(step.getWayPoints())) {
-                        mPolyline = new PolylineOptions().width(8)
-                                .color(getResources().getColor(R.color.colorBlack)).points(step.getWayPoints());
-                        mRoute = mMap.addOverlay(mPolyline);
-                        mRoutes.add(mRoute);
+            if (XUtils.checkEmptyList(mass.getNewSteps())) {
+                for (List<MassTransitRouteLine.TransitStep> massList : mass.getNewSteps()) {
+                    if (XUtils.checkEmptyList(massList) && !TextUtils.isEmpty(massList.get(0).getInstructions())) {
+                        XBusInfoMessageEvent.getInstance().setInfo(massList.get(0).getInstructions());
                     }
                 }
             }

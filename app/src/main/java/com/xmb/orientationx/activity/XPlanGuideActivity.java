@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.exception.XBaseException;
+import com.xmb.orientationx.interfaces.XBusInfoListener;
+import com.xmb.orientationx.message.XBusInfoMessageEvent;
 import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.utils.XAppDataUtils;
 
@@ -27,10 +30,14 @@ public class XPlanGuideActivity extends XBaseActivity {
     Button mBikeGuideButton;
     @BindView(R.id.id_car_guide_btn)
     Button mVehicleGuideButton;
+    @BindView(R.id.id_bus_info_btn)
+    Button mBusButton;
     @BindView(R.id.id_start_pt_txt)
     EditText mStartEditText;
     @BindView(R.id.id_end_pt_txt)
     EditText mEndEditText;
+    @BindView(R.id.id_bus_info_txt)
+    TextView mBusTextView;
 
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
@@ -42,6 +49,12 @@ public class XPlanGuideActivity extends XBaseActivity {
     }
 
     private void initViews() {
+        XBusInfoMessageEvent.getInstance().setBusListener(new XBusInfoListener() {
+            @Override
+            public void onBusInfo(String info) {
+                mBusTextView.setText(info);
+            }
+        });
         mStartEditText.setText(XAppDataUtils.getInstance().getsAdr());
         mEndEditText.setText(XAppDataUtils.getInstance().geteAdr());
         mStartEditText.setEnabled(false);
@@ -75,6 +88,20 @@ public class XPlanGuideActivity extends XBaseActivity {
                 if (aBoolean) {
                     startMapActivity();
                     XClickMessageEvent.getInstance().setClick(0);
+                }
+            }
+        });
+
+        RxView.clicks(mBusButton).map(new Function<Object, Boolean>() {
+            @Override
+            public Boolean apply(Object o) throws Exception {
+                return !TextUtils.isEmpty(mStartEditText.getText()) && !TextUtils.isEmpty(mEndEditText.getText());
+            }
+        }).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    XClickMessageEvent.getInstance().setClick(1);
                 }
             }
         });
