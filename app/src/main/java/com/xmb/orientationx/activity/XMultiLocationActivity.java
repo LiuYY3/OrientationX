@@ -277,13 +277,13 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                 } else {
                     Toast.makeText(XMultiLocationActivity.this, "need more locations", Toast.LENGTH_SHORT).show();
                 }
-                RxView.clicks(mBackImagView).subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        finish();
-                    }
-                });
+            }
+        });
 
+        RxView.clicks(mBackImagView).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                finish();
             }
         });
     }
