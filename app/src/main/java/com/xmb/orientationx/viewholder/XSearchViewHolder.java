@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.adaptor.XMultiSearchAdaptor;
 import com.xmb.orientationx.adaptor.XSearchAdaptor.ItemSelectedListener;
+import com.xmb.orientationx.data.XSearchInfo;
+import com.xmb.orientationx.utils.XAppDataUtils;
 
 import butterknife.ButterKnife;
 
@@ -36,12 +38,18 @@ public class XSearchViewHolder extends RecyclerView.ViewHolder {
         mSave = save;
     }
 
-    public void bind(final int position, final ItemSelectedListener listener) {
+    public void bind(final XSearchInfo info, final boolean save, final int position, final ItemSelectedListener listener) {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (listener != null) {
                     listener.onItemSelected(position);
+                    if (save) {
+                        info.setSave(true);
+                        XAppDataUtils.getInstance().setFavorite(info);
+                    } else {
+                        XAppDataUtils.getInstance().removeFavorite(info);
+                    }
                 }
             }
         });

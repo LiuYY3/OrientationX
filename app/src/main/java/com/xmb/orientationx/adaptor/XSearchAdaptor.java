@@ -31,6 +31,9 @@ public class XSearchAdaptor extends RecyclerView.Adapter<XSearchViewHolder> {
     private ItemSelectedListener mItemSelectedListener;
     private Context mContext;
 
+    private boolean save = false;
+    private XSearchInfo info;
+
     public XSearchAdaptor (Context context, ArrayList<XSearchInfo> searchInfos) {
         mContext = context;
         mSearchResults = searchInfos;
@@ -65,23 +68,23 @@ public class XSearchAdaptor extends RecyclerView.Adapter<XSearchViewHolder> {
         }).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean o) throws Exception {
-                XSearchInfo temp = mSearchResults.get(position);
+                info = mSearchResults.get(position);
                 if (o) {
                     holder.mSaveImageView.setImageResource(R.mipmap.ic_notsaved);
                     holder.setSaved(false);
-                    XAppDataUtils.getInstance().removeFavorite(temp);
+                    save = false;
                 } else {
                     holder.mSaveImageView.setImageResource(R.mipmap.ic_saved);
                     holder.setSaved(true);
-                    temp.setSave(true);
-                    XAppDataUtils.getInstance().setFavorite(temp);
+                    save = true;
+
                 }
             }
         });
 
         holder.mListTextView.setText(mSearchResults.get(position).getName());
 
-        holder.bind(position, mItemSelectedListener);
+        holder.bind(info, save, position, mItemSelectedListener);
     }
 
     @Override
