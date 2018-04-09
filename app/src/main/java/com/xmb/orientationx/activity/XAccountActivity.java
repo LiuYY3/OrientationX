@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.xmb.orientationx.utils.StatusBarUtil;
 import com.xmb.orientationx.utils.XAppDataUtils;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import butterknife.BindString;
@@ -95,10 +97,14 @@ public class XAccountActivity extends XBaseActivity {
                 break;
         }
 
-//        if (XAppDataUtils.getInstance().getProfileImg() != null) {
-//            mBitmap = XAppDataUtils.getInstance().getProfileImg();
-//            mProfileImage.setImageBitmap(mBitmap);
-//        }
+        Log.i("Bitmap", "initViews: " + XAppDataUtils.getInstance().getProfileImg());
+
+        if (XAppDataUtils.getInstance().getProfileImg() != null) {
+            mBitmap = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888);
+            mBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(XAppDataUtils.getInstance().getProfileImg()));
+            Log.i("Bitmap", "initViews: " + mBitmap.toString());
+            mProfileImage.setImageBitmap(mBitmap);
+        }
     }
 
     private void initRxBindings() {
@@ -273,9 +279,13 @@ public class XAccountActivity extends XBaseActivity {
         Bundle extras = data.getExtras();
         if (extras != null) {
             mBitmap = extras.getParcelable("data");
-//            ArrayList<Bitmap> temp = new ArrayList<>();
-//            temp.add(mBitmap);
-//            XAppDataUtils.getInstance().setProfileImg(temp);
+            Log.i("Bitmap", "setImageToView: " + mBitmap.getWidth());
+            byte[] temp;
+            int bt = mBitmap.getByteCount();
+            ByteBuffer bf = ByteBuffer.allocate(bt);
+            mBitmap.copyPixelsToBuffer(bf);
+            temp = bf.array();
+            XAppDataUtils.getInstance().setProfileImg(temp);
             //这里图片是方形的，可以用一个工具类处理成圆形（很多头像都是圆形，这种工具类网上很多不再详述）
             mProfileImage.setImageBitmap(mBitmap);//显示图片
             //在这个地方可以写上上传该图片到服务器的代码，后期将单独写一篇这方面的博客，敬请期待...

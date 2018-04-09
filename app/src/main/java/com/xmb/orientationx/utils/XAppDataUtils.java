@@ -39,7 +39,7 @@ public class XAppDataUtils {
 
     private double linearDistance;
 
-    private ArrayList<Bitmap> profileImg;
+    private byte[] profileImg;
 
     private static final XAppDataUtils instance = new XAppDataUtils();
 
@@ -172,15 +172,11 @@ public class XAppDataUtils {
         Hawk.put(XDataConstants.LINEAR_DISTANCE, linearDistance);
     }
 
-    public Bitmap getProfileImg() {
-        if (Hawk.get(XDataConstants.PRO_IMG) == null) {
-            return null;
-        }
-        profileImg =  Hawk.get(XDataConstants.PRO_IMG);
-        return profileImg.get(0);
+    public byte[] getProfileImg() {
+        return Hawk.get(XDataConstants.PRO_IMG);
     }
 
-    public void setProfileImg(ArrayList<Bitmap> profileImg) {
+    public void setProfileImg(byte[] profileImg) {
         Hawk.put(XDataConstants.PRO_IMG, profileImg);
     }
 }
