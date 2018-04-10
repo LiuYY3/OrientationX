@@ -84,6 +84,7 @@ import com.xmb.orientationx.utils.XUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -106,6 +107,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
 
     private String mLocateCity = "盐城";
     private static final String APP_FOLDER_NAME = "XMapFragment";
+    private HashMap<Integer, Double> mDistanceMap = new HashMap<>();
 
     private Unbinder mBinder;
     private BaiduMap mMap;
@@ -124,6 +126,10 @@ public class XMapFragment extends Fragment implements XLocationListener,
     private WalkNavigateHelper mWalkHelper;
     private BikeNavigateHelper mBikeHelper;
     private double mPtsDistance = 0;
+    private double mFirstPtsDistance = 0;
+    private double mSecondPtsDistance = 0;
+    private List<LatLng> mFirstLine;
+    private List<LatLng> mSecondLine;
     private double mStartLat;
     private double mStartLng;
     private String mStartAddress;
@@ -152,6 +158,8 @@ public class XMapFragment extends Fragment implements XLocationListener,
     public void onLocations(XSearchInfo[] xSearchInfos) {
         mMap.clear();
 
+        Log.i("Three", "onLocations: " + "I am Here !");
+
         if (xSearchInfos[0].getPt() != null) {
             doShowMarker(xSearchInfos[0].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
         }
@@ -164,32 +172,30 @@ public class XMapFragment extends Fragment implements XLocationListener,
             doShowMarker(xSearchInfos[2].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
         }
 
-        if (xSearchInfos[3].getPt() != null) {
-            doShowMarker(xSearchInfos[3].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
-        }
+//        if (xSearchInfos[3].getPt() != null) {
+//            doShowMarker(xSearchInfos[3].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
+//        }
+//
+//        if (xSearchInfos[4].getPt() != null) {
+//            doShowMarker(xSearchInfos[4].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
+//        }
 
-        if (xSearchInfos[4].getPt() != null) {
-            doShowMarker(xSearchInfos[4].getPt(), R.mipmap.d_marker, MarkerOptions.MarkerAnimateType.jump);
-        }
-
-        if (xSearchInfos[0].getPt() != null && xSearchInfos[1].getPt() != null) {
+        if (xSearchInfos[0] != null && xSearchInfos[1] != null && xSearchInfos[2] != null) {
             doMultiRouteSearch(R.color.colorBlack, xSearchInfos[0].getPt(), xSearchInfos[1].getPt());
-        }
-
-        if (xSearchInfos[1].getPt() != null && xSearchInfos[2].getPt() != null) {
             doMultiRouteSearch(R.color.colorRed, xSearchInfos[1].getPt(), xSearchInfos[2].getPt());
+            doMultiRouteSearch(R.color.colorBlue, xSearchInfos[0].getPt(), xSearchInfos[2].getPt());
         }
 
-        if (xSearchInfos[2].getPt() != null && xSearchInfos[3].getPt() != null) {
-            doMultiRouteSearch(R.color.colorBlue, xSearchInfos[2].getPt(), xSearchInfos[3].getPt());
-        }
-
-        if (xSearchInfos[3].getPt() != null && xSearchInfos[4].getPt() != null) {
-            doMultiRouteSearch(R.color.colorGreen, xSearchInfos[3].getPt(), xSearchInfos[4].getPt());
-        }
+//        if (xSearchInfos[2].getPt() != null && xSearchInfos[3].getPt() != null) {
+//            doMultiRouteSearch(R.color.colorBlue, xSearchInfos[2].getPt(), xSearchInfos[3].getPt());
+//        }
+//
+//        if (xSearchInfos[3].getPt() != null && xSearchInfos[4].getPt() != null) {
+//            doMultiRouteSearch(R.color.colorGreen, xSearchInfos[3].getPt(), xSearchInfos[4].getPt());
+//        }
     }
 
-    private void doMultiRouteSearch(final int rcolor, LatLng st, LatLng ed) {
+    private void doMultiRouteSearch(final int rcolor, final LatLng st, LatLng ed) {
         mRoutePlanSearch = RoutePlanSearch.newInstance();
         mRoutePlanSearch.setOnGetRoutePlanResultListener(new OnGetRoutePlanResultListener() {
             @Override
@@ -212,19 +218,41 @@ public class XMapFragment extends Fragment implements XLocationListener,
                 if (XUtils.checkEmptyList(drivingRouteResult.getRouteLines())) {
                     DrivingRouteLine drive = drivingRouteResult.getRouteLines().get(0);
                     if (XUtils.checkEmptyList(drive.getAllStep())) {
+                        double temp = 0;
+                        List<LatLng> tempL = new ArrayList<>();
                         for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
                             if (XUtils.checkEmptyList(step.getWayPoints())) {
-                                mPolyline = new PolylineOptions().width(8)
-                                        .color(getResources().getColor(rcolor)).points(step.getWayPoints());
-                                mRoute = mMap.addOverlay(mPolyline);
+
+                                Log.i("Three", "onGetDrivingRouteResult: " + "I am Here !");
                                 for (int i = 0; i < step.getWayPoints().size() - 1; i++) {
-                                    mPtsDistance = mPtsDistance + DistanceUtil.getDistance(step.getWayPoints().get(i), step.getWayPoints().get(i + 1));
+                                    Log.i("Three", "onGetDrivingRouteResult: " + step.getWayPoints().size());
+                                    temp = temp + DistanceUtil.getDistance(step.getWayPoints().get(i), step.getWayPoints().get(i + 1));
+                                    tempL.add(step.getWayPoints().get(i));
                                 }
-                                mRoutes.add(mRoute);
+                                tempL.add(step.getWayPoints().get(step.getWayPoints().size() - 1));
                             }
                         }
-                        XAppDataUtils.getInstance().setDistance(mPtsDistance);
-                        Log.i("Distance", "onGetDrivingRouteResult: " + mPtsDistance);
+
+                        if (temp < mFirstPtsDistance || mFirstPtsDistance == 0) {
+                            mFirstPtsDistance = temp;
+                            mFirstLine = tempL;
+                        } else {
+                            if (temp < mSecondPtsDistance || mSecondPtsDistance == 0) {
+                                mSecondPtsDistance = temp;
+                                mSecondLine = tempL;
+                            }
+                        }
+
+                        if (rcolor == R.color.colorBlue) {
+                            mPolyline = new PolylineOptions().width(8)
+                                    .color(getResources().getColor(R.color.colorBlack)).points(mFirstLine);
+                            mRoute = mMap.addOverlay(mPolyline);
+                            mRoutes.add(mRoute);
+                            mPolyline = new PolylineOptions().width(8)
+                                    .color(getResources().getColor(R.color.colorRed)).points(mSecondLine);
+                            mRoute = mMap.addOverlay(mPolyline);
+                            mRoutes.add(mRoute);
+                        }
                     }
                 }
             }

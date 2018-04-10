@@ -102,16 +102,16 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                 mSecondPtEditText.setEnabled(false);
                 mFiveLocation[2] = mSearchResults.get(position);
                 break;
-            case 3:
-                mThirdPtEditText.setText(mSearchResults.get(position).getName());
-                mThirdPtEditText.setEnabled(false);
-                mFiveLocation[3] = mSearchResults.get(position);
-                break;
-            case 4:
-                mForthPtEditText.setText(mSearchResults.get(position).getName());
-                mForthPtEditText.setEnabled(false);
-                mFiveLocation[4] = mSearchResults.get(position);
-                break;
+//            case 3:
+//                mThirdPtEditText.setText(mSearchResults.get(position).getName());
+//                mThirdPtEditText.setEnabled(false);
+//                mFiveLocation[3] = mSearchResults.get(position);
+//                break;
+//            case 4:
+//                mForthPtEditText.setText(mSearchResults.get(position).getName());
+//                mForthPtEditText.setEnabled(false);
+//                mFiveLocation[4] = mSearchResults.get(position);
+//                break;
             default:
                 break;
         }
@@ -220,27 +220,28 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                         doSearch(charSequence.toString());
                     }
                 });
-        RxTextView.textChanges(mThirdPtEditText)
-                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
-                .subscribe(new Consumer<CharSequence>() {
-                    @Override
-                    public void accept(CharSequence charSequence) throws Exception {
-                        mStyle = 3;
-                        doSearch(charSequence.toString());
-                    }
-                });
-        RxTextView.textChanges(mForthPtEditText)
-                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
-                .subscribe(new Consumer<CharSequence>() {
-                    @Override
-                    public void accept(CharSequence charSequence) throws Exception {
-                        mStyle = 4;
-                        doSearch(charSequence.toString());
-                    }
-                });
-        RxView.clicks(mBeginRouteButton).map(new Function<Object, Boolean>() {
+//        RxTextView.textChanges(mThirdPtEditText)
+//                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
+//                .subscribe(new Consumer<CharSequence>() {
+//                    @Override
+//                    public void accept(CharSequence charSequence) throws Exception {
+//                        mStyle = 3;
+//                        doSearch(charSequence.toString());
+//                    }
+//                });
+//        RxTextView.textChanges(mForthPtEditText)
+//                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
+//                .subscribe(new Consumer<CharSequence>() {
+//                    @Override
+//                    public void accept(CharSequence charSequence) throws Exception {
+//                        mStyle = 4;
+//                        doSearch(charSequence.toString());
+//                    }
+//                });
+
+        RxView.clicks(mBeginRouteButton).map(new Function<Object, Integer>() {
             @Override
-            public Boolean apply(Object o) throws Exception {
+            public Integer apply(Object o) throws Exception {
                 int i = 0;
                 if (!TextUtils.isEmpty(mStartPtEditText.getText())) {
                     i = i + 1;
@@ -254,23 +255,33 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                     i = i + 1;
                 }
 
-                if (!TextUtils.isEmpty(mThirdPtEditText.getText())) {
-                    i = i + 1;
-                }
-
-                if (!TextUtils.isEmpty(mForthPtEditText.getText())) {
-                    i = i + 1;
-                }
+//                if (!TextUtils.isEmpty(mThirdPtEditText.getText())) {
+//                    i = i + 1;
+//                }
+//
+//                if (!TextUtils.isEmpty(mForthPtEditText.getText())) {
+//                    i = i + 1;
+//                }
 
                 if (i < 2) {
-                    return false;
+                    return 0;
                 }
-                return true;
+
+                if (i == 3) {
+                    return 1;
+                }
+
+                return 2;
             }
-        }).subscribe(new Consumer<Boolean>() {
+        }).subscribe(new Consumer<Integer>() {
             @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
+            public void accept(Integer a) throws Exception {
+                Log.i("Three", "accept: " + a);
+                if (a == 0) {
+                    XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
+                    Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
+                    startActivity(intent);
+                } else if (a == 1) {
                     XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
                     Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
                     startActivity(intent);
