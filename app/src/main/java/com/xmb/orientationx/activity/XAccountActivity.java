@@ -53,6 +53,8 @@ public class XAccountActivity extends XBaseActivity {
     LinearLayout mToFavoriteLayout;
     @BindView(R.id.id_to_profile_navigation_layout)
     LinearLayout mToPlanGuideLayout;
+    @BindView(R.id.id_to_profile_location_layout)
+    LinearLayout mToCommonLayout;
     @BindView(R.id.id_cal_distance_layout)
     LinearLayout mToDistanceLayout;
     @BindView(R.id.id_to_profile_style_layout)
@@ -137,6 +139,13 @@ public class XAccountActivity extends XBaseActivity {
             @Override
             public void accept(Object o) throws Exception {
                 Intent intent = new Intent(XAccountActivity.this, XPlanGuideActivity.class);
+                startActivity(intent);
+            }
+        });
+        RxView.clicks(mToCommonLayout).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                Intent intent = new Intent(XAccountActivity.this, XCommonActivity.class);
                 startActivity(intent);
             }
         });

@@ -71,6 +71,9 @@
         <activity android:name=".activity.XPlanGuideActivity"
             android:launchMode="singleTop"/>
 
+        <activity android:name=".activity.XCommonActivity"
+            android:launchMode="singleTop"/>
+
         <activity android:name=".activity.XDistanceActivity"
             android:launchMode="singleTop"/>
 

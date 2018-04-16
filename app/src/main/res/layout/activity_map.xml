@@ -38,5 +38,18 @@
         android:textSize="@dimen/dimen_input_txt_size"
         android:textColor="@android:color/white"
         android:text="@string/app_guide_start"/>
+    <Button
+        android:id="@+id/id_common_start_btn"
+        android:background="@drawable/btn_background"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dimen_margin_40"
+        android:layout_marginRight="@dimen/dimen_search_bar_margin"
+        android:layout_width="@dimen/dimen_btn_width"
+        android:layout_height="@dimen/dimen_btn_width"
+        android:textSize="@dimen/dimen_input_txt_size"
+        android:textColor="@android:color/white"
+        android:text="@string/app_common_start"
+        />
 
 </RelativeLayout>

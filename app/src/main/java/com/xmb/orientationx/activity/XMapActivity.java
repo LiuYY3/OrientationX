@@ -52,6 +52,10 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
     TextView mKeyShowTextView;
     @BindView(R.id.id_guide_start_btn)
     Button mStartGuideButton;
+    @BindView(R.id.id_common_start_btn)
+    Button mCommonGuideButton;
+    @BindView(R.id.id_search_back_button)
+    Button mSearchBackButton;
     @BindView(R.id.id_to_profile_btn)
     Button mToProfileButton;
 
@@ -90,8 +94,10 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
     private void updateSearchBar() {
         mFragmentManager.beginTransaction().remove(mSearchFragment).commit();
         mStartGuideButton.setVisibility(View.VISIBLE);
+        mCommonGuideButton.setVisibility(View.VISIBLE);
         mToProfileButton.setVisibility(View.VISIBLE);
         mInputLayout.setVisibility(View.GONE);
+        mSearchBackButton.setVisibility(View.GONE);
         mKeyShowTextView.setText(XSearchMessageEvent.getInstance().getInput());
         mKeyShowTextView.setVisibility(View.VISIBLE);
     }
@@ -99,6 +105,7 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
     private void initView() {
         mInputLayout.setVisibility(View.GONE);
         mFragmentManager = getSupportFragmentManager();
+        mSearchBackButton.setVisibility(View.GONE);
     }
 
     private void initMap() {
@@ -115,7 +122,9 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
                 .add(mContainer, mSearchFragment, XTags.SEARCH)
                 .commit();
         mStartGuideButton.setVisibility(View.GONE);
+        mCommonGuideButton.setVisibility(View.GONE);
         mToProfileButton.setVisibility(View.GONE);
+        mSearchBackButton.setVisibility(View.VISIBLE);
     }
 
     private void initRXBinding() {
@@ -139,6 +148,13 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
                 }
             }
         });
+        RxView.clicks(mSearchBackButton).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                updateSearchBar();
+            }
+        });
+
 
         RxView.clicks(mStartGuideButton).map(new Function<Object, Boolean>() {
             @Override
@@ -152,6 +168,21 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
                     XClickMessageEvent.getInstance().setClick(0);
                 } else {
                     Toast.makeText(XMapActivity.this, "Please input something !", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        RxView.clicks(mCommonGuideButton).map(new Function<Object, Boolean>() {
+            @Override
+            public Boolean apply(Object o) throws Exception {
+                return TextUtils.isEmpty(mKeyShowTextView.getText());
+            }
+        }).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean b) throws Exception {
+                if (!b) {
+                    XClickMessageEvent.getInstance().setClick(0);
+                } else {
+                    Toast.makeText(XMapActivity.this, "Please set up the common address !", Toast.LENGTH_SHORT).show();
                 }
             }
         });

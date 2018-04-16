@@ -8,9 +8,11 @@
     <string name="app_edit">Edit</string>
     <string name="app_done">Done</string>
     <string name="app_delete">Delete</string>
-
+    <string name="app_finish">Finish</string>
+    <string name="app_common">Common</string>
     <!--map-->
     <string name="app_guide_start">G</string>
+    <string name="app_common_start">H</string>
     <string name="app_to_profile">P</string>
     <string name="app_to_set">S</string>
     <string name="app_to_map">M</string>
@@ -20,6 +22,9 @@
     <string name="app_distance">Distance</string>
     <string name="app_guide">Guide</string>
     <string name="app_guideplan">GuidePlan</string>
+    <string name="app_co1">家庭住址:</string>
+    <string name="app_co2">公司地址:</string>
+    <string name="app_back">＜</string>
 
 
     <!--profile-->

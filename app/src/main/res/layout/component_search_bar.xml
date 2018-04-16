@@ -17,17 +17,20 @@
         android:layout_height="@dimen/dimen_edit_height"
         android:background="@android:color/white">
 
+
+
         <EditText
             android:id="@+id/id_search_txt"
-            android:layout_marginStart="@dimen/dimen_search_bar_margin"
-            android:layout_alignParentStart="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:imeOptions="actionDone"
+
+            android:layout_alignParentTop="true"
+
+            android:background="@android:color/white"
             android:hint="@string/app_input_hint"
+            android:imeOptions="actionDone"
             android:inputType="text"
-            android:textSize="@dimen/dimen_title_txt_size"
-            android:background="@android:color/white"/>
+            android:textSize="@dimen/dimen_title_txt_size" />
 
     </RelativeLayout>
 

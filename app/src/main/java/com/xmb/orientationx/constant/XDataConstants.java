@@ -3,7 +3,7 @@ package com.xmb.orientationx.constant;
 import android.graphics.Bitmap;
 
 /**
- * Created by lym on 2018/03/05.
+ * Created by 徐梦笔on 2018/03/05.
  */
 
 public class XDataConstants {
@@ -23,6 +23,10 @@ public class XDataConstants {
     public static final String END_ADDRESS = "EADR";
 
     public static final String DISTANCE = "DIS";
+
+    public static final String COMMON1 = "COM1";
+
+    public static final String COMMON2 = "COM2";
 
     public static final String LINEAR_DISTANCE = "LDIS";
 

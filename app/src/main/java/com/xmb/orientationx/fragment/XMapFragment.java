@@ -426,7 +426,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
                 for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
                     if (XUtils.checkEmptyList(step.getWayPoints())) {
                         mPolyline = new PolylineOptions().width(8)
-                                .color(getResources().getColor(R.color.colorBlack)).points(step.getWayPoints());
+                                .color(getResources().getColor(R.color.colorHoloBlue)).points(step.getWayPoints());
                         mRoute = mMap.addOverlay(mPolyline);
                         for (int i = 0; i < step.getWayPoints().size() - 1; i++) {
                             mPtsDistance = mPtsDistance + DistanceUtil.getDistance(step.getWayPoints().get(i), step.getWayPoints().get(i + 1));

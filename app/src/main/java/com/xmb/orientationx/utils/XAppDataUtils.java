@@ -37,6 +37,10 @@ public class XAppDataUtils {
 
     private String style;
 
+    private String common1;
+
+    private String common2;
+
     private double linearDistance;
 
     private byte[] profileImg;
@@ -154,6 +158,21 @@ public class XAppDataUtils {
     public void setDistance(double distance) {
         Hawk.put(XDataConstants.DISTANCE, distance);
     }
+    public void setCommon1(String common1) {
+        Hawk.put(XDataConstants.COMMON1, common1);
+    }
+    public void setCommon2(String common2) {
+        Hawk.put(XDataConstants.COMMON2, common2);
+    }
+
+    public String getCommon1() {
+        return Hawk.get(XDataConstants.COMMON1,common1);
+    }
+
+    public String getCommon2() {
+        return Hawk.get(XDataConstants.COMMON2,common2);
+    }
+
 
     public String getStyle() {
         return Hawk.get(XDataConstants.MAP_STYLE, "c");
