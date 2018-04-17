@@ -26,6 +26,7 @@ import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.message.XKeyMessageEvent;
 import com.xmb.orientationx.message.XSearchMessageEvent;
 import com.xmb.orientationx.utils.StatusBarUtil;
+import com.xmb.orientationx.utils.XAppDataUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -174,13 +175,13 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
         RxView.clicks(mCommonGuideButton).map(new Function<Object, Boolean>() {
             @Override
             public Boolean apply(Object o) throws Exception {
-                return TextUtils.isEmpty(mKeyShowTextView.getText());
+                return TextUtils.isEmpty(XAppDataUtils.getInstance().getCommon1());
             }
         }).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean b) throws Exception {
                 if (!b) {
-                    XClickMessageEvent.getInstance().setClick(0);
+                    XClickMessageEvent.getInstance().setClick(1);
                 } else {
                     Toast.makeText(XMapActivity.this, "Please set up the common address !", Toast.LENGTH_SHORT).show();
                 }

@@ -92,7 +92,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by lym on 2018/02/08.
+ * Created by Mr xu on 2018/02/08.
  */
 
 public class XMapFragment extends Fragment implements XLocationListener,
@@ -290,9 +290,25 @@ public class XMapFragment extends Fragment implements XLocationListener,
 
     @Override
     public void onClick(int click) {
-        if (mDestination != null) {
+         {
             switch (click) {
                 case 0:
+                    if (BaiduNaviManager.isNaviInited()&&mDestination != null) {
+                            BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
+                                    mMyPosition.latitude,
+                                    mMyLocation.getAddrStr(),
+                                    null,
+                                    BNRoutePlanNode.CoordinateType.GCJ02);
+
+                            BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.longitude,
+                                    mDestination.latitude,
+                                    mDestinationAddress,
+                                    null,
+                                    BNRoutePlanNode.CoordinateType.GCJ02);
+                            doStartNavigator(stNode, endNode);
+                    }
+                    break;
+                case 1:
                     if (BaiduNaviManager.isNaviInited()) {
                         BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
                                 mMyPosition.latitude,
@@ -300,17 +316,18 @@ public class XMapFragment extends Fragment implements XLocationListener,
                                 null,
                                 BNRoutePlanNode.CoordinateType.GCJ02);
 
-                        BNRoutePlanNode endNode = new BNRoutePlanNode(mDestination.longitude,
-                                mDestination.latitude,
-                                mDestinationAddress,
+                        BNRoutePlanNode endNode = new BNRoutePlanNode(XAppDataUtils.getInstance().getcPt1().longitude,
+                                XAppDataUtils.getInstance().getcPt1().latitude,
+                                XAppDataUtils.getInstance().getCommon1(),
                                 null,
                                 BNRoutePlanNode.CoordinateType.GCJ02);
                         doStartNavigator(stNode, endNode);
                     }
                     break;
                 case 2:
+                    if (mDestination != null){
                     BikeNaviLaunchParam param = new BikeNaviLaunchParam().stPt(mMyPosition).endPt(mDestination);
-                    doBikeNavigator(param);
+                    doBikeNavigator(param);}
                     break;
                 default:
                     PlanNode st = PlanNode.withLocation(mMyPosition);
@@ -425,7 +442,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
                 mPtsDistance = 0;
                 for (DrivingRouteLine.DrivingStep step : drive.getAllStep()) {
                     if (XUtils.checkEmptyList(step.getWayPoints())) {
-                        mPolyline = new PolylineOptions().width(8)
+                        mPolyline = new PolylineOptions().width(15)
                                 .color(getResources().getColor(R.color.colorHoloBlue)).points(step.getWayPoints());
                         mRoute = mMap.addOverlay(mPolyline);
                         for (int i = 0; i < step.getWayPoints().size() - 1; i++) {

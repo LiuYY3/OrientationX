@@ -158,9 +158,17 @@ public class XAppDataUtils {
     public void setDistance(double distance) {
         Hawk.put(XDataConstants.DISTANCE, distance);
     }
+
     public void setCommon1(String common1) {
         Hawk.put(XDataConstants.COMMON1, common1);
     }
+    public void setcPt1(LatLng cPt1) {
+        Hawk.put(XDataConstants.CPT1,cPt1);
+    }
+    public LatLng getcPt1() {
+        return Hawk.get(XDataConstants.CPT1, new LatLng(0, 0));
+    }
+
     public void setCommon2(String common2) {
         Hawk.put(XDataConstants.COMMON2, common2);
     }

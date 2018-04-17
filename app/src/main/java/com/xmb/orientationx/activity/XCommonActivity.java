@@ -76,7 +76,7 @@ public class XCommonActivity extends  XBaseActivity implements XCityListener,OnG
         switch (style) {
             case 0:
                 mFirstCoEditText.setText(mSearchResults.get(position).getName());
-                XAppDataUtils.getInstance().setsPt(mSearchResults.get(position).getPt());
+                XAppDataUtils.getInstance().setcPt1(mSearchResults.get(position).getPt());
                 XAppDataUtils.getInstance().setCommon1(mSearchResults.get(position).getName());
                 mSearchResults = new ArrayList<XSearchInfo>();
                 mAdapter.updateResults(0, mSearchResults);
