@@ -83,6 +83,7 @@ public class XCommonActivity extends  XBaseActivity implements XCityListener,OnG
                 break;
             case 1:
                 mSecondCoEditText.setText(mSearchResults.get(position).getName());
+                XAppDataUtils.getInstance().setcPt2(mSearchResults.get(position).getPt());
                 XAppDataUtils.getInstance().setCommon2(mSearchResults.get(position).getName());
                 mSearchResults = new ArrayList<XSearchInfo>();
                 mAdapter.updateResults(1, mSearchResults);

@@ -278,13 +278,15 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
             public void accept(Integer a) throws Exception {
                 Log.i("Three", "accept: " + a);
                 if (a == 0) {
-                    XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
-                    Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
-                    startActivity(intent);
+//                    XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
+//                    Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
+//                    startActivity(intent);
+                    Toast.makeText(XMultiLocationActivity.this, "need more locations", Toast.LENGTH_SHORT).show();
                 } else if (a == 1) {
                     XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
                     Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(XMultiLocationActivity.this, "need more locations", Toast.LENGTH_SHORT).show();
                 }

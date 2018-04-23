@@ -239,19 +239,26 @@ public class XMapFragment extends Fragment implements XLocationListener,
                         } else {
                             if (temp < mSecondPtsDistance || mSecondPtsDistance == 0) {
                                 mSecondPtsDistance = temp;
-                                mSecondLine = tempL;
+                                if (XUtils.checkEmptyList(tempL)) {
+                                    mSecondLine = tempL;
+                                } else {
+                                    Toast.makeText(XMapFragment.this.getContext(), "Null Second Line", Toast.LENGTH_SHORT).show();
+                                }
+
                             }
                         }
 
                         if (rcolor == R.color.colorBlue) {
-                            mPolyline = new PolylineOptions().width(8)
-                                    .color(getResources().getColor(R.color.colorBlack)).points(mFirstLine);
-                            mRoute = mMap.addOverlay(mPolyline);
-                            mRoutes.add(mRoute);
-                            mPolyline = new PolylineOptions().width(8)
-                                    .color(getResources().getColor(R.color.colorRed)).points(mSecondLine);
-                            mRoute = mMap.addOverlay(mPolyline);
-                            mRoutes.add(mRoute);
+                            if (XUtils.checkEmptyList(mFirstLine) && XUtils.checkEmptyList(mSecondLine)) {
+                                mPolyline = new PolylineOptions().width(8)
+                                        .color(getResources().getColor(R.color.colorBlack)).points(mFirstLine);
+                                mMap.addOverlay(mPolyline);
+                                mPolyline = new PolylineOptions().width(8)
+                                        .color(getResources().getColor(R.color.colorRed)).points(mSecondLine);
+                                mMap.addOverlay(mPolyline);
+                            } else {
+                                Toast.makeText(XMapFragment.this.getContext(), "Has a null line !", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }

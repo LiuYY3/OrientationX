@@ -37,13 +37,21 @@ public class XAppDataUtils {
 
     private String style;
 
-    private String common1;
 
-    private String common2;
 
     private double linearDistance;
 
     private byte[] profileImg;
+
+    private LatLng cPt1;
+
+    private LatLng cPt2;
+
+    private String common1;
+
+    private  String common2;
+
+    private int setc;
 
     private static final XAppDataUtils instance = new XAppDataUtils();
 
@@ -162,11 +170,18 @@ public class XAppDataUtils {
     public void setCommon1(String common1) {
         Hawk.put(XDataConstants.COMMON1, common1);
     }
+
     public void setcPt1(LatLng cPt1) {
         Hawk.put(XDataConstants.CPT1,cPt1);
     }
+    public void setcPt2(LatLng cPt2) {
+        Hawk.put(XDataConstants.CPT2,cPt2);
+    }
     public LatLng getcPt1() {
         return Hawk.get(XDataConstants.CPT1, new LatLng(0, 0));
+    }
+    public LatLng getcPt2() {
+        return Hawk.get(XDataConstants.CPT2, new LatLng(0, 0));
     }
 
     public void setCommon2(String common2) {
