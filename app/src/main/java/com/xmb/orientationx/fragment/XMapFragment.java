@@ -342,6 +342,22 @@ public class XMapFragment extends Fragment implements XLocationListener,
 
                     mRoutePlanSearch.masstransitSearch((new MassTransitRoutePlanOption().from(st).to(ed)));
                     break;
+                case 3:
+                    if (BaiduNaviManager.isNaviInited()) {
+                        BNRoutePlanNode stNode = new BNRoutePlanNode(mMyPosition.longitude,
+                                mMyPosition.latitude,
+                                mMyLocation.getAddrStr(),
+                                null,
+                                BNRoutePlanNode.CoordinateType.GCJ02);
+
+                        BNRoutePlanNode endNode = new BNRoutePlanNode(XAppDataUtils.getInstance().getcPt2().longitude,
+                                XAppDataUtils.getInstance().getcPt2().latitude,
+                                XAppDataUtils.getInstance().getCommon2(),
+                                null,
+                                BNRoutePlanNode.CoordinateType.GCJ02);
+                        doStartNavigator(stNode, endNode);
+                    }
+                    break;
             }
         }
     }

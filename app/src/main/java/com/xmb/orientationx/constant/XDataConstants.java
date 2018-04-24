@@ -31,6 +31,8 @@ public class XDataConstants {
     public static final String CPT1 = "CPT1";
     public static final String CPT2 = "CPT2";
 
+    public static final String CO1 = "CO1";
+
     public static final String LINEAR_DISTANCE = "LDIS";
 
     public static final String MAP_STYLE = "STYLE";

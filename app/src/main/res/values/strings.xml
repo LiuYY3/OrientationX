@@ -23,6 +23,9 @@
     <string name="app_guide">Guide</string>
     <string name="app_guideplan">GuidePlan</string>
     <string name="app_co1">家庭住址:</string>
+    <string name="app_set_co">点击前往常用地址进行设置</string>
+    <string name="app_set_co1">地图界面H用于导航家庭住址</string>
+    <string name="app_set_co2">地图界面H用于导航公司地址</string>
     <string name="app_co2">公司地址:</string>
     <string name="app_back">＜</string>
     <string name="app_s1">主界面H所回地址设置</string>

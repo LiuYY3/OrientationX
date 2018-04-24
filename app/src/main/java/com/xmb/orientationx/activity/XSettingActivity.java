@@ -1,8 +1,10 @@
 package com.xmb.orientationx.activity;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -17,7 +19,7 @@ import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
 /**
- * Created by lym on 2018/03/07.
+ * Created by Mr xu on 2018/03/07.
  */
 
 public class XSettingActivity extends XBaseActivity {
@@ -26,6 +28,8 @@ public class XSettingActivity extends XBaseActivity {
     TextView mNameTextView;
     @BindView(R.id.id_setting_to_profile_btn)
     Button mSettingToProfileButton;
+    @BindView(R.id.id_setting_ib1)
+    ImageButton mSettingib1;
 
     @BindString(R.string.app_setting)
     String setting;
@@ -52,5 +56,13 @@ public class XSettingActivity extends XBaseActivity {
                 overridePendingTransition(R.anim.top_in, R.anim.top_out);
             }
         });
+        RxView.clicks(mSettingib1).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                Intent intent = new Intent(XSettingActivity.this, XSettingCoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 }

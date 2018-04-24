@@ -51,6 +51,9 @@
         <activity android:name=".activity.XSettingActivity"
             android:launchMode="singleTop"/>
 
+        <activity android:name=".activity.XSettingCoActivity"
+            android:launchMode="singleTop"/>
+
         <activity
             android:name=".activity.XMapActivity"
             android:launchMode="singleTask"

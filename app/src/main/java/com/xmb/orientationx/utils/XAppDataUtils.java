@@ -49,6 +49,8 @@ public class XAppDataUtils {
 
     private String common1;
 
+    private int a ;
+
     private  String common2;
 
     private int setc;
@@ -183,6 +185,16 @@ public class XAppDataUtils {
     public LatLng getcPt2() {
         return Hawk.get(XDataConstants.CPT2, new LatLng(0, 0));
     }
+
+    public void setco1(int a) {
+        Hawk.put(XDataConstants.CO1,a);
+    }
+
+
+    public int getco1(){return Hawk.get(XDataConstants.CO1, a);}
+
+
+
 
     public void setCommon2(String common2) {
         Hawk.put(XDataConstants.COMMON2, common2);

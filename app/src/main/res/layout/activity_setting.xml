@@ -10,6 +10,7 @@
         layout="@layout/ui_common_title"/>
 
     <ImageButton
+        android:id="@+id/id_setting_ib1"
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_alignParentStart="true"
