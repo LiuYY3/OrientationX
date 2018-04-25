@@ -175,14 +175,15 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
         RxView.clicks(mCommonGuideButton).map(new Function<Object, Boolean>() {
             @Override
             public Boolean apply(Object o) throws Exception {
-                return TextUtils.isEmpty(XAppDataUtils.getInstance().getCommon1())&&TextUtils.isEmpty(XAppDataUtils.getInstance().getCommon2());
+                return TextUtils.isEmpty(XAppDataUtils.getInstance().getCommon1()) && TextUtils.isEmpty(XAppDataUtils.getInstance().getCommon2());
             }
         }).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean b) throws Exception {
                 if (!b) {
-                    if(XAppDataUtils.getInstance().getco1()==1){
-                    XClickMessageEvent.getInstance().setClick(3);}else if(XAppDataUtils.getInstance().getco1()==2){
+                    if (XAppDataUtils.getInstance().getco1() == 1) {
+                        XClickMessageEvent.getInstance().setClick(3);
+                    } else if (XAppDataUtils.getInstance().getco1() == 2) {
                         XClickMessageEvent.getInstance().setClick(1);
                     }
                 } else {

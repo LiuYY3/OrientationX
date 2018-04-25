@@ -2,6 +2,7 @@ package com.xmb.orientationx.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -46,22 +47,19 @@ public class XSettingCoActivity extends XBaseActivity {
         setContentView(R.layout.activity_settingco);
         ButterKnife.bind(this);
         initViews();
-        initRxBindings();
-        super.onCreate(savedInstanceState);
-        //加载布局文件
-        setContentView(R.layout.activity_main);
+//        initRxBindings();
         //获取实例
         radioGroup=(RadioGroup)findViewById(R.id.radioGroupID);
         co1=(RadioButton)findViewById(R.id.id_co1);
         co2=(RadioButton)findViewById(R.id.id_co2);
-        //设置监听
-
-
+        //设置监
     }
 
     private void initViews() {
         this.showTitle(true, setting);
         this.showLeftIcon(true, R.mipmap.ic_action_arrow_left);
+        XAppDataUtils.getInstance().setco1(1);
+        Log.i("Test", "initViews: " + XAppDataUtils.getInstance().getco1());
     }
     private void initRxBindings() {
 

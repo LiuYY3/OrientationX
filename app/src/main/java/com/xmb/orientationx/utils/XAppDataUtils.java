@@ -190,11 +190,9 @@ public class XAppDataUtils {
         Hawk.put(XDataConstants.CO1,a);
     }
 
-
-    public int getco1(){return Hawk.get(XDataConstants.CO1, a);}
-
-
-
+    public int getco1(){
+        return Hawk.get(XDataConstants.CO1, a);
+    }
 
     public void setCommon2(String common2) {
         Hawk.put(XDataConstants.COMMON2, common2);
