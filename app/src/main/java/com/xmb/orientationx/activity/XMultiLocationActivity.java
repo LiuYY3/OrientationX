@@ -24,6 +24,7 @@ import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.xmb.orientationx.R;
@@ -69,6 +70,8 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
     String guideplan;
     @BindView(R.id.id_activity_left_icon)
     ImageView mBackImagView;
+    @BindView(R.id.id_text)
+    TextView mTextview;
 
     private static final long CLICK_GAP = 500;
 
@@ -102,16 +105,16 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                 mSecondPtEditText.setEnabled(false);
                 mFiveLocation[2] = mSearchResults.get(position);
                 break;
-//            case 3:
-//                mThirdPtEditText.setText(mSearchResults.get(position).getName());
-//                mThirdPtEditText.setEnabled(false);
-//                mFiveLocation[3] = mSearchResults.get(position);
-//                break;
-//            case 4:
-//                mForthPtEditText.setText(mSearchResults.get(position).getName());
-//                mForthPtEditText.setEnabled(false);
-//                mFiveLocation[4] = mSearchResults.get(position);
-//                break;
+            case 3:
+                mThirdPtEditText.setText(mSearchResults.get(position).getName());
+                mThirdPtEditText.setEnabled(false);
+                mFiveLocation[3] = mSearchResults.get(position);
+                break;
+            case 4:
+                mForthPtEditText.setText(mSearchResults.get(position).getName());
+                mForthPtEditText.setEnabled(false);
+                mFiveLocation[4] = mSearchResults.get(position);
+                break;
             default:
                 break;
         }
@@ -220,24 +223,24 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                         doSearch(charSequence.toString());
                     }
                 });
-//        RxTextView.textChanges(mThirdPtEditText)
-//                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
-//                .subscribe(new Consumer<CharSequence>() {
-//                    @Override
-//                    public void accept(CharSequence charSequence) throws Exception {
-//                        mStyle = 3;
-//                        doSearch(charSequence.toString());
-//                    }
-//                });
-//        RxTextView.textChanges(mForthPtEditText)
-//                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
-//                .subscribe(new Consumer<CharSequence>() {
-//                    @Override
-//                    public void accept(CharSequence charSequence) throws Exception {
-//                        mStyle = 4;
-//                        doSearch(charSequence.toString());
-//                    }
-//                });
+        RxTextView.textChanges(mThirdPtEditText)
+                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<CharSequence>() {
+                    @Override
+                    public void accept(CharSequence charSequence) throws Exception {
+                        mStyle = 3;
+                        doSearch(charSequence.toString());
+                    }
+                });
+        RxTextView.textChanges(mForthPtEditText)
+                .debounce(CLICK_GAP, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<CharSequence>() {
+                    @Override
+                    public void accept(CharSequence charSequence) throws Exception {
+                        mStyle = 4;
+                        doSearch(charSequence.toString());
+                    }
+                });
 
         RxView.clicks(mBeginRouteButton).map(new Function<Object, Integer>() {
             @Override
@@ -255,40 +258,165 @@ public class XMultiLocationActivity extends XBaseActivity implements XCityListen
                     i = i + 1;
                 }
 
-//                if (!TextUtils.isEmpty(mThirdPtEditText.getText())) {
-//                    i = i + 1;
-//                }
-//
-//                if (!TextUtils.isEmpty(mForthPtEditText.getText())) {
-//                    i = i + 1;
-//                }
+                if (!TextUtils.isEmpty(mThirdPtEditText.getText())) {
+                    i = i + 1;
+                }
 
-                if (i < 2) {
+                if (!TextUtils.isEmpty(mForthPtEditText.getText())) {
+                    i = i + 1;
+                }
+
+                if (i < 3) {
                     return 0;
                 }
 
                 if (i == 3) {
                     return 1;
                 }
+                if (i == 4) {
+                    return 2;
+                }
+                return 3;
 
-                return 2;
+
             }
         }).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer a) throws Exception {
-                Log.i("Three", "accept: " + a);
+//                for (int i = 0 ; i <4;i++){
+//
+//                Log.i("Test", String.valueOf(i) + mFiveLocation[i].getPt().toString());
+//                }
+                mAllRecyclerView.setVisibility(View.GONE);
                 if (a == 0) {
 //                    XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
 //                    Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
 //                    startActivity(intent);
                     Toast.makeText(XMultiLocationActivity.this, "need more locations", Toast.LENGTH_SHORT).show();
                 } else if (a == 1) {
-                    XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
-                    Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(XMultiLocationActivity.this, "need more locations", Toast.LENGTH_SHORT).show();
+
+                    double a1 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt());
+                    double a2 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt());
+                    if(a1<a2){mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName());
+                    }else {mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName());}
+//
+//                    XMultiLocationMessageEvent.getInstance().setLocations(mFiveLocation);
+//                    Intent intent = new Intent(XMultiLocationActivity.this, XMapActivity.class);
+//                    startActivity(intent);
+//                    finish();
+                } else if(a==2){
+
+                    double a1 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt());
+                    double a2 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt());
+                    double a3 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt());
+                    double a4 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt());
+                    double a5 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt());
+                    double a6 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt());
+                    double aa []=new double[]{a1,a2,a3,a4,a5,a6};
+                    double dis = a1;
+                    for(int i = 0;i<6;i++){
+                        Log.i("Test", "record: "+String.valueOf(aa[i]));
+                        if(dis> aa[i]){
+                            dis = aa[i]; Log.i("Test", "change: "+String.valueOf(dis)); }
+
+                    }
+//                    Log.i("Test", "record: "+String.valueOf(aa[5]));
+                    Log.i("Test", "record: "+String.valueOf(dis));
+                    if (dis == a1) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName());
+                    }else if (dis == a2) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName());
+                    }else if (dis == a3) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName());
+                    }else if (dis == a4) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName());
+                    }else if (dis == a5) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName());
+                    }else if (dis == a6) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName());
+                    }
+
+                }else if (a==3){
+                    double a1 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[4].getPt());
+                    double a2 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[3].getPt());
+                    double a3 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[4].getPt());
+                    double a4 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[2].getPt());
+                    double a5 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt());
+                    double a6 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt());
+                    double a7 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[4].getPt());
+                    double a8 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[4].getPt());
+                    double a9 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[3].getPt());
+                    double a10 = DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[4].getPt());
+                    double a11= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt());
+                    double a12= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt());
+                    double a13= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[4].getPt());
+                    double a14= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[2].getPt());
+                    double a15= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[4].getPt());
+                    double a16= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[1].getPt());
+                    double a17= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt());
+                    double a18= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt());
+                    double a19= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt());
+                    double a20= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt());
+                    double a21= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[3].getPt());
+                    double a22= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt());
+                    double a23= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[1].getPt())+DistanceUtil.getDistance(mFiveLocation[1].getPt(),mFiveLocation[2].getPt());
+                    double a24= DistanceUtil.getDistance(mFiveLocation[0].getPt(),mFiveLocation[4].getPt())+DistanceUtil.getDistance(mFiveLocation[4].getPt(),mFiveLocation[3].getPt())+DistanceUtil.getDistance(mFiveLocation[3].getPt(),mFiveLocation[2].getPt())+DistanceUtil.getDistance(mFiveLocation[2].getPt(),mFiveLocation[1].getPt());
+                    double aa[]=new double[]{a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22,a23,a24};
+                    double dis = a1 ;
+                    for (int i = 0 ; i<24;i++){
+                        if(dis> aa[i]){
+                            dis = aa[i];  }
+
+                    }
+                    if (dis == a1) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[4].getName());
+                }else if (dis == a2) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[3].getName());
+                    }else if (dis == a3) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[4].getName());
+                    }else if(dis == a4) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[2].getName());
+                    }else if(dis == a5) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName());
+                    }else if(dis == a6) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName());
+                    }else if(dis == a7) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[4].getName());
+                    }else if(dis == a8) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[3].getName());
+                    }else if(dis == a9) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[4].getName());
+                    }else if(dis == a10) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[1].getName());
+                    }else if(dis == a11) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName());
+                    }else if(dis == a12) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName());
+                    }else if(dis == a13) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[4].getName());
+                    }else if(dis == a14) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[2].getName());
+                    }else if(dis == a15) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[4].getName());
+                    }else if(dis == a16) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[1].getName());
+                    }else if(dis == a17) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName());
+                    }else if(dis == a18) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName());
+                    }else if(dis == a19) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName());
+                    }else if(dis == a20) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName());
+                    }else if(dis == a21) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[3].getName());
+                    }else if(dis == a22) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName());
+                    }else if(dis == a23) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[1].getName()+"、"+mFiveLocation[2].getName());
+                    }else if(dis == a24) {
+                        mTextview.setText(mFiveLocation[0].getName()+"、"+mFiveLocation[4].getName()+"、"+mFiveLocation[3].getName()+"、"+mFiveLocation[2].getName()+"、"+mFiveLocation[1].getName());
+                    }
                 }
             }
         });

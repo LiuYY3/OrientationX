@@ -358,6 +358,7 @@ public class XMapFragment extends Fragment implements XLocationListener,
                         doStartNavigator(stNode, endNode);
                     }
                     break;
+
             }
         }
     }

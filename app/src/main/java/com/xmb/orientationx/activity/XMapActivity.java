@@ -182,11 +182,12 @@ public class XMapActivity extends XBaseActivity implements XCloseStatusListener 
             public void accept(Boolean b) throws Exception {
                 if (!b) {
                     if (XAppDataUtils.getInstance().getco1() == 1) {
-                        XClickMessageEvent.getInstance().setClick(3);
-                    } else if (XAppDataUtils.getInstance().getco1() == 2) {
                         XClickMessageEvent.getInstance().setClick(1);
+                    } else if (XAppDataUtils.getInstance().getco1() == 2) {
+                        XClickMessageEvent.getInstance().setClick(3);
                     }
                 } else {
+
                     Toast.makeText(XMapActivity.this, "Please set up the common address !", Toast.LENGTH_SHORT).show();
                 }
             }

@@ -19,6 +19,14 @@
         android:layout_marginTop="21dp"
         android:background="@color/colorWhiteHalfTran" />
 
+    <ImageButton
+        android:id="@+id/id_setting_ib2"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_alignTop="@+id/id_setting_ib1"
+        android:layout_toEndOf="@+id/id_setting_to_profile_btn"
+        android:background="@color/colorWhiteHalfTran" />
+
     <Button
         android:id="@+id/id_setting_to_profile_btn"
         android:layout_below="@id/id_common_title"

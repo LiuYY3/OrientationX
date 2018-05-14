@@ -3,6 +3,7 @@ package com.xmb.orientationx.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -13,6 +14,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.xmb.orientationx.R;
 import com.xmb.orientationx.exception.XBaseException;
 
+import com.xmb.orientationx.message.XClickMessageEvent;
 import com.xmb.orientationx.utils.XAppDataUtils;
 
 import butterknife.BindString;
@@ -37,9 +39,8 @@ public class XSettingCoActivity extends XBaseActivity {
     RadioButton mCo1;
     @BindView(R.id.id_co2)
     RadioButton mCo2;
-    private RadioGroup radioGroup;
-    private RadioButton co1;
-    private RadioButton co2;
+    @BindView(R.id.radioGroupID)
+    RadioGroup mCo;
     private int a = 0;
     @Override
     public void onCreateBase(Bundle savedInstanceState) throws XBaseException {
@@ -47,19 +48,43 @@ public class XSettingCoActivity extends XBaseActivity {
         setContentView(R.layout.activity_settingco);
         ButterKnife.bind(this);
         initViews();
-//        initRxBindings();
+        initRxBindings();
         //获取实例
-        radioGroup=(RadioGroup)findViewById(R.id.radioGroupID);
-        co1=(RadioButton)findViewById(R.id.id_co1);
-        co2=(RadioButton)findViewById(R.id.id_co2);
         //设置监
     }
 
     private void initViews() {
         this.showTitle(true, setting);
         this.showLeftIcon(true, R.mipmap.ic_action_arrow_left);
-        XAppDataUtils.getInstance().setco1(1);
-        Log.i("Test", "initViews: " + XAppDataUtils.getInstance().getco1());
+
+        Log.i("Test", "initViews: " + mCo1.getId());
+
+//        mCo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mCo1.isChecked()){
+//                    XAppDataUtils.getInstance().setco1(1);
+//                }
+//                if (mCo2.isChecked()){
+//                    XAppDataUtils.getInstance().setco1(2);
+//                }else{mCo1.isChecked(); XAppDataUtils.getInstance().setco1(1);}
+//            }
+//        });
+        if (XAppDataUtils.getInstance().getco1() == 2) {
+            mCo.check(mCo2.getId());
+        } else  {
+            mCo.check(mCo1.getId());
+        }
+        mCo.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                           @Override
+                                           public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                               if(checkedId==mCo1.getId()){
+                                                   XAppDataUtils.getInstance().setco1(1);
+                                               }else{
+                                                   XAppDataUtils.getInstance().setco1(2);
+                                               }
+                                           }
+                                       });
     }
     private void initRxBindings() {
 
@@ -76,20 +101,21 @@ public class XSettingCoActivity extends XBaseActivity {
                 startActivity(intent);
             }
         });
-        RxView.clicks(co1).subscribe(new Consumer<Object>() {
-            @Override
-            public void accept(Object o) throws Exception {
-
-                XAppDataUtils.getInstance().setco1(1);
-            }
-        });
-        RxView.clicks(co2).subscribe(new Consumer<Object>() {
-            @Override
-            public void accept(Object o) throws Exception {
-
-                XAppDataUtils.getInstance().setco1(2);
-            }
-        });
+//        RxView.clicks(co1).subscribe(new Consumer<Object>() {
+//            @Override
+//            public void accept(Object o) throws Exception {
+//
+//                XAppDataUtils.getInstance().setco1(1);
+//                Log.i("Test", "initViews: " + XAppDataUtils.getInstance().getco1());
+//            }
+//        });
+//        RxView.clicks(co2).subscribe(new Consumer<Object>() {
+//            @Override
+//            public void accept(Object o) throws Exception {
+//
+//                XAppDataUtils.getInstance().setco1(2);
+//            }
+//        });
     }
 
 }

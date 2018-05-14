@@ -120,7 +120,7 @@ public class XPlanGuideActivity extends XBaseActivity {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
-                    XClickMessageEvent.getInstance().setClick(1);
+                    XClickMessageEvent.getInstance().setClick(10);
                 }
             }
         });
